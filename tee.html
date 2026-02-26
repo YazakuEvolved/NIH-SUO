@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>NIH-SUO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topline">
+		<a href="index.html" class="logo-link">
+        	<img src="Logo.svg" alt="Sivuston logo" class="logo-small">
+    	</a>
+    <p>Nih-Suo</p>
+    	<div>
+        	<button id="theme-toggle">光 / 闇</button>
+    	</div>
+</header>
+<main class="content">
+    <h1>Tee</h1>
+	
+		<h2>Historia</h2>
+			<p>Tee saapui Japaniin Kiinasta 700- luvulla. Teeseremonia arvellaan
+			kehittyneen Japanin 45. keisari Shōmu <span lang="ja"><ruby>聖武天皇
+			<rt>しょうむてんのう</rt></ruby></span> järjestämässä sadan
+			munkin teeseremoniassa. Teen suosion lisääntyessä teen kasvatus siirtyi
+			myös Japaninmeren paremmalle puolelle. 1100- luvulla matchan alkoi olla
+			suosittua. 1500- luvulla Teemestari Sen no Rikyū
+			<span lang="ja"><ruby>千利休<rt>せんのりきゅう</rt></ruby></span> kohotti
+			teeseremonian taiteenmuodoksi. Vielä nykyäänkin teeseremonia noudattaa hänen
+			oppejansa. Tee oli myös kansaa yhdistävä tekiä, koska siitä pääsi nauttimaan
+			lähes poikkeuksetta kaikki ihmiset yhteiskunnallisesta luokasta riippumatta.
+			</p>
+    <p>
+        <a href="index.html">← Takaisin etusivulle</a>
+    </p>
+</main>
+<footer  class="bottomline">
+    <p>© 2026 Lyytikäinen Aki. All rights reserved.</p>
+</footer>
+<script>
+    const toggleButton = document.getElementById('theme-toggle');
+
+    // Lataa tallennettu teema
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+    }
+
+    toggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+
+        if (document.body.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+</script>
+</body>
+</html>

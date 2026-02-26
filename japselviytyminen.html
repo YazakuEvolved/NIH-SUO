@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>NIH-SUO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topline">
+		<a href="index.html" class="logo-link">
+        	<img src="Logo.svg" alt="Sivuston logo" class="logo-small">
+    	</a>
+    <p>Nih-Suo</p>
+    	<div>
+        	<button id="theme-toggle">光 / 闇</button>
+    	</div>
+</header>
+
+<main class="content">
+    <h1>Selviytymisopas Japaniin</h1>
+    <h2>Päivän kurssi</h2>
+    	<p>1 € = <span id="rate">Ladataan...</span>¥</p>
+    		<script>
+    			fetch('https://api.frankfurter.app/latest?from=EUR&to=JPY')
+    			.then(r => r.json())
+    			.then(data => { document.getElementById('rate').textContent = data.rates.JPY;
+    			})
+    			.catch(() => {
+    			document.getElementById('rate').textContent = 'Virhe haussa'; });
+    		</script>
+    <h2>
+    	Maahan saapuminen
+    </h2>
+    	<p>
+    		Suomalainen saa vierailla Japanissa 3 kuukautta ilman viisumia
+    		(visa on arrival), jonka jälkeen on poistuttava maasta, myös jos rahat ovat
+    		lopussa, niin kotia ja töihin lähteminen on suositeltavaa.<br>
+    		Huom. päivän kurssi ylhäällä.<br>
+    		Ennen maahan saapumista on täytettävä kaavake, missä käydään läpi, kuka on,
+    		missä majoittuu, asiat mitä on tuomassa maahan ja mitä ei saa tuoda.
+    		Tämä dokumentti voidaan täyttää joko paperisena tai suositeltavaa on,
+    		että se hoidetaan etukäteen sähköisesti seuraavalta
+    		sivulta. <br>
+    		<a href="https://services.digital.go.jp/en/visit-japan-web/" 
+    		target="_blank" rel="noopener">
+        	Visit Japan Web </a>
+        </p>
+    <h2>
+        Julkinen liikenne
+    </h2>
+		<p>
+			Japanin julkinen liikenne on kuuluisaa täsmällisyydestä, joka on eritoten
+			suurnopeusjunaverkoston (shinkansen jap:<span lang="ja"><ruby>新幹線
+			<rt>しんかんせん</rt></ruby></span>) ansiota, mutta myös muut julkisen
+			liikenteen kulkuneuvot ovat luotettavia, vaikka eivät shinkansenille
+			pärjääkkään, mutta eipä mailmassa mikään muukaan pärjää, niin ei ole häpeä
+			hävitä parhaalle.<br>
+			Shinkansen jutusta tuli niin pitkä, että siirsin sen omalle sivulle, jos
+			vaikka lukijaa ei Shinkansen jostain syystä kiinnosta, niin käsitellään
+			nyt vain muuta julkista liikennettä. Toisaalta jos junat eivät kiinnosta, niin
+			matkusta ennemmin vaikka
+			<a href="https://en.wikipedia.org/wiki/Rail_transport_in_Iceland" 
+    		target="_blank" rel="noopener">
+        	tuonne </a>.<br>
+			
+		</p>
+	<h2>
+		Ravintolat
+	</h2>
+		<p>
+			Japani on yksi ravintoloiden luvatuista maista, joten niitä on joka
+			hintaluokkaan- muutamasta sadasta jenin annoksesta siihen asti, mitä on
+			suostuvainen maksamaan.<br>
+			Japanilaisissa ravintoloissa on oma etikettinsä,
+			joka on hyvä osata ainakin pääpiirteittäin, että ei aiheuta ongelmia
+			ja pahaa mieltä ympäristöön, eikä myöskään kerrytä vihamielisyyttä
+			turisteja kohtaan.
+		</p>
+		<p>
+			Varsinkin halvemmissa ravintoloissa on yleistä että ravintolan ulkopuolella,
+			tai aulassa on automaatti, millä tilaus hoidetaan ja usein myös maksetaankin.
+			Näissä on usein myös englanninkielinen käännös, joten niitä on helppoa
+			käyttää turistinkin.<br>
+			Varsinkin pienemmissä baareissa käteinen on ainoa mahdollinen maksutapa ja
+			joissakin näissä on myös rajaus, että palvelevat vain japanin kieltä
+			puhuvia.
+		</p>
+		<p>
+			<li><a href="ravintolasanasto.html">Ravintola sanastoa</a></li>
+			Tai jos ei ole kiinnostusta opiskella Japanin kieltä, niin matkusta ennemmin
+			<a href="https://www.visitporvoo.fi"target="_blank" rel="noopener">tänne
+			</a>.
+		</p>
+		<h3>Noren <span lang="ja"><ruby>暖簾<rt>のれん</rt></ruby></span> </h3>
+		
+		<p>	
+			Kun ravintola aukeaa oven päälle ripustetaan verho eli noren, jossa on
+			yleensä muutama pysty viilto helpottamaan kulkemista.<br>
+			Yksinkertaisimmillaan noren on pieni kankainen verho, ilman koristeita, mutta
+			yleensä siihen on kirjoitettu firman nimi, tai piirretty logo
+			(tai mon tunnus), jolloin se toimii ravintolan "kasvoina".
+			Kankaan lisäksi norenia on valmistettu bambusta, riisi oljesta,
+			sekä muista sopivista materiaaleista.
+			Noren pituudet vaihtelevat oven yläreunan peittävistä aina lähes maahan
+			asti oleviin verhoihin. Noren alkuperäinen tarkoitus on varjostaa ja estää
+			pölyn kulkeutuminen ravintolan sisälle.
+		</p>
+		<h2> Yleistä asiaa Japanista
+		<h3>Mon <span lang="ja"><ruby>紋<rt>もん</rt></ruby></span></h3>
+		<p>
+			Mon tunnus on perinteinen sukujen käyttämä tunnus, mikä vastaa osittain
+			eurooppassa käytettyihin vaakunoihin. Mon on voitu painattaa esimerkiksi
+			lippuihin jolloin eri heimojen tunnistus on ollut helpompaa. Tunnusta
+			on painettu myös vaatteisiin, huonekaluihin ja kyltteihin.<br>
+			Mon historia alkaa Heian-kaudelta, kun aateliset alkoivat maalaamaan tunnuksia
+			kärryihin. Tällä selvitettiin, että kenen kuului antaa tietä toiselle, kun
+			nähtiin suoraan kuka oli vastassa ilman, että tarvitsi alkaa kysellä sitä.<br>
+			Laajimmalle levinnyt mon on varmaan Mitsubishin yhtiö logo, joka on yrityksen
+			perustajan Iwasaki Yatarōn valitsema. <br>
+			Vaikka Japanilla ei virallisesti ole valtiollista mon tunnusta, käytetään
+			keisarrillisen suvun kikumon tunnusta esimerkiksi Japanin passissa, sekä se on
+			perinteisesti edustanut koko valtiota.
+		</p>
+    <p>
+        <a href="index.html">← Takaisin etusivulle</a>
+    </p>
+</main>
+<footer  class="bottomline">
+    <p>© 2026 Lyytikäinen Aki. All rights reserved.</p>
+</footer>
+<script>
+    const toggleButton = document.getElementById('theme-toggle');
+
+    // Lataa tallennettu teema
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+    }
+
+    toggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+
+        if (document.body.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+</script>
+</body>
+</html>

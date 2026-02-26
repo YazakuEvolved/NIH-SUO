@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>NIH-SUO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topline">
+		<a href="index.html" class="logo-link">
+        	<img src="Logo.svg" alt="Sivuston logo" class="logo-small">
+    	</a>
+    <p>Nih-Suo</p>
+    	<div>
+        	<button id="theme-toggle">光 / 闇</button>
+    	</div>
+</header>
+<main class="content">
+    <h1>Syntymävuosi oikeassa ajassa.</h1>
+		<label>Valitse päivämäärä:</label>
+<input type="date" id="pvm" onchange="muunnaTarkka()">
+<p id="tulos">Valitse päivämäärä nähdäksesi aikakauden.</p>
+<script>
+function muunnaTarkka() {
+    const pvmArvo = document.getElementById("pvm").value;
+    if (!pvmArvo) return;
+    const pvm = new Date(pvmArvo);
+    const muotoilija = new Intl.DateTimeFormat('ja-JP-u-ca-japanese', {
+        era: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    const japanilainenPvm = muotoilija.format(pvm);
+    const eraMuotoilija = new Intl.DateTimeFormat('en-US-u-ca-japanese', { era: 'long' });
+    const osat = eraMuotoilija.formatToParts(pvm);
+    const eraNimi = osat.find(p => p.type === 'era').value;
+    document.getElementById("tulos").innerHTML = 
+        `Länsimainen päivä: <b>${pvm.toLocaleDateString('fi-FI')}</b><br>` +
+        `Japanilainen muoto: <b>${japanilainenPvm}</b><br>` +
+        `Aikakausi: <b>${eraNimi}</b>`;
+}
+</script>	
+    <p>
+        <a href="index.html">← Takaisin etusivulle</a>
+    </p>
+</main>
+<footer  class="bottomline">
+    <p>© 2026 Lyytikäinen Aki. All rights reserved.</p>
+</footer>
+<script>
+    const toggleButton = document.getElementById('theme-toggle');
+
+    // Lataa tallennettu teema
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+    }
+
+    toggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+
+        if (document.body.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+</script>
+</body>
+</html>

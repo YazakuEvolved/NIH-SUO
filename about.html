@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>NIH-SUO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header class="topline">
+		<a href="index.html" class="logo-link">
+        	<img src="Logo.svg" alt="Sivuston logo" class="logo-small">
+    	</a>
+    <p>Nih-Suo</p>
+    	<div>
+        	<button id="theme-toggle"></button>
+    	</div>
+    		
+    		<script>
+			const toggleButton = document.getElementById('theme-toggle');
+
+			function updateButton() {
+    			if (document.body.classList.contains('dark')) {
+        		// Dark mode päällä
+        		toggleButton.innerHTML = '闇 🗼🌙';
+    			} else {
+        		// Light mode päällä
+        		toggleButton.innerHTML = '光 🗼☀️';
+    		}
+		}
+
+			// Lataa tallennettu teema
+			if (localStorage.getItem('theme') === 'dark') {
+    			document.body.classList.add('dark');
+		}
+
+				// Päivitä nappi sivun latautuessa
+				updateButton();
+
+				// Klikkaus
+				toggleButton.addEventListener('click', () => {
+    			document.body.classList.toggle('dark');
+
+    		if (document.body.classList.contains('dark')) {
+        		localStorage.setItem('theme', 'dark');
+    		} else {
+        		localStorage.setItem('theme', 'light');
+    	}
+
+    	updateButton();
+		});
+	</script>
+</header>
+
+<main class="content">
+    <h1>Kirjoittajan tervehdys</h1>
+
+    <p>
+        Japani on ollut tärkeä osa minua jo pienestä asti, kiitos siitä kuuluu
+        naapurikunnan karatesalille, eli jos siellä olisi ollut
+        taekwondo sali, niin silloin tälle sivulle eksyessänne olisitte
+        todennäköisesti päässeet lueskelemaan Koreasta.
+    </p>
+     <p>
+        Karatea tuli harrastettua vaihtelevalla aktiivisuudella varusmiespalvelukseen
+        asti. Sitä ennen oli kuitenkin tullut, jo Japanilainen elokuva, sekä musiikki
+        kuvioihin (animea ja mangaa unohtamatta), kiitos siitä kuuluu internetille
+        ja eritoten muutamalle Hong Kongissa ja Tokiossa toimineelle (nykyisin jo
+        lopettaneelle) verkkokaupalle.
+     <p>
+        Intissä päivystänäjä piti lukea Sotilaan käsikirjaa, joka käy vanhaksi parin
+        lukukerran jälkeen, joten pyysin osaston kouluttajalta (upseeri) luvan lukea myös
+        muuta alan kirjallisuutta, jolloin ensiksi tutustuin alan merkkiteokseen
+        Sun Tzu:n kirjoittamaan Sodankäynnin taito <span lang="zh-CN"> 孙子兵法 </span>.
+        Tämä itsessään oli pohtimista aiheuttava teos positiivisessa mielessä, mutta
+        samalla aloin tutkia olisiko heidän rakkaalla naapurilla, myös jotain vastaavaa
+        koska samurai ja sota jne... ja sieltähän löytyi Miyamoto Musashi:n mahti teos
+        Maa, vesi, tuli, tuuli ja tyhjyys <span lang="ja">五輪書</span>　Go Rin no Sho
+        tai oikein　käännettynä Viiden sormuksen kirja. Sitä kirjaa pidän edelleenkin
+        erittäin merkittävänä teoksena, johon palailen aina tarpeen mukaan.
+	</p> 
+	<p>
+        Japani fanitus ei koskaa ole hävinnyt ja näin keski-iän kynnyksellä tuskin se
+        tulee häviämäänkään.<br>
+        
+        Nippon banzai! 日本万歳 🇯🇵
+    </p>
+
+    <p>
+        <a href="index.html">← Takaisin etusivulle</a>
+    </p>
+</main>
+
+<footer  class="bottomline">
+    <p>© 2026 Lyytikäinen Aki. All rights reserved.</p>
+</footer>
+<script>
+    const toggleButton = document.getElementById('theme-toggle');
+
+    // Lataa tallennettu teema
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+    }
+
+    toggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+
+        if (document.body.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+</script>
+</body>
+</html>

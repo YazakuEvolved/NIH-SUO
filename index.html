@@ -1,0 +1,120 @@
+<!doctype html>
+
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>NIH-SUO</title>
+		
+		<meta name="description"content="Nih-Suo" />
+		<meta name="keywords"content="nihon, finland, japani, suomi" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		
+		<meta http-equiv="author"content="Aki Lyytikäinen" />
+		<meta http-equiv="content-language" content="fi-fi" />	
+		
+		<link rel="stylesheet" href="style.css">	
+				
+</head>
+<body>
+<header class="topline">
+    <p> <span lang="ja">© 2026 リュウティカイネン アキ。 無断転載を禁じます。</span> </p>
+    	<div>
+        	<button id="theme-toggle"></button>
+    	</div>
+    		<script>
+			const toggleButton = document.getElementById('theme-toggle');
+
+			function updateButton() {
+    			if (document.body.classList.contains('dark')) {
+        		// Dark mode päällä
+        		toggleButton.innerHTML = '闇 🗼🌙';
+    			} else {
+        		// Light mode päällä
+        		toggleButton.innerHTML = '光 🗼☀️';
+    		}
+		}
+			// Lataa tallennettu teema
+			if (localStorage.getItem('theme') === 'dark') {
+    			document.body.classList.add('dark');
+		}
+
+				// Päivitä nappi sivun latautuessa
+				updateButton();
+
+				// Klikkaus
+				toggleButton.addEventListener('click', () => {
+    			document.body.classList.toggle('dark');
+
+    		if (document.body.classList.contains('dark')) {
+        		localStorage.setItem('theme', 'dark');
+    		} else {
+        		localStorage.setItem('theme', 'light');
+    	}
+    	updateButton();
+		});
+	</script>
+</header>
+<main class="content">
+    <h1>Nih-Suo</h1>
+		<img src="Logo.svg" alt="Sivuston logo" class="logo">
+    <h2>Asiaa Japanista</h2>
+    <p class="leipateksti">
+        Sivu on muodostunut kirjoittajan henkilökohtaisesta projektista
+        tutustua html ohjelmointiin, sekä tiedon jakamiseen, tässä tapauksessa
+        Suomalaisille Japanista suomeksi, sekä ehkä myöhemmin japaniksi asiaa Suomesta.
+    </p>
+<script>
+    const toggleButton = document.getElementById('theme-toggle');
+
+    // Lataa tallennettu teema
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+    }
+
+    toggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+
+        if (document.body.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+</script>
+</body>
+</html>
+    <section>
+        <h2>Japani</h2>
+        	<p><li><a href="japselviytyminen.html">Selviytymisopas Japaniin</a></li></p>
+        	<p><li><a href="shinkansen.html">Luotijunajuttuja</a></li></p>
+        <p>Kaupungit (osio saapuu joskus myöhemmin... ehkä)</p>
+            
+        	
+        <h2><span lang="ja"><ruby>日本<rt>にほん</rt></ruby>への
+        <ruby>愛<rt>あい</rt></ruby></span></h2>
+        
+        	<p><li><a href="keisarit.html">Keisarit</a></li></p>
+        	<p><li><a href="tee.html">Tee</a></li></p>
+        	<p><li><a href="ravintolat.html">Ravintolat</a></li></p>
+        	<p><li><a href="ruoka.html">Ruoka</a></li></p>
+        	<p><li><a href="vuosiluku.html">Syntymävuosi laskuri</a></li></p>
+    </section>
+</main>
+    <ul>
+		<li><a href="about.html">About the site</a></li>
+        <li><a href="#">Takaisin alkuun</a></li>
+    </ul>
+<footer  class="bottomline">
+	<p>Sivusto ei myy mainostilaa, kerää käyttäjätietoja, eikä tallenna evästeitä.</p>
+	<p lang="ja">
+    このサイトでは
+    <ruby>広告<rt>こうこく</rt></ruby><ruby>スペース<rt></rt></ruby>を
+    <ruby>販売<rt>はんばい</rt></ruby>したり、
+    <ruby>ユーザーデータ<rt></rt></ruby>を<ruby>収集<rt>しゅうしゅう</rt></ruby>したり、
+    <ruby>Cookie<rt>クッキー</rt></ruby>を<ruby>保存<rt>ほぞん</rt></ruby>したりすることはありません。
+</p>
+    <p>© 2026 Lyytikäinen Aki. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
