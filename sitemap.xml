@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://yazakuevolved.github.io/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Esimerkkisivuja – vaihda omien tiedostojen mukaan -->
+  <url>
+    <loc>https://yazakuevolved.github.io/index.html</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://yazakuevolved.github.io/japselviytyminen.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://yazakuevolved.github.io/shinkansen.html</loc>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://yazakuevolved.github.io/keisarit.html</loc>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://yazakuevolved.github.io/tee.html</loc>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://yazakuevolved.github.io/ravintolat.html</loc>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://yazakuevolved.github.io/ruoka.html</loc>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://yazakuevolved.github.io/vuosiluku.html</loc>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://yazakuevolved.github.io/about.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
