@@ -91,6 +91,8 @@ rt {
 }
 table {
     width: 100%;
+    background-color: #BC002D;
+    color: black;
     border-collapse: collapse;
     margin-bottom: 2rem;
 }
