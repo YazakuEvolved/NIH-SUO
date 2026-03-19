@@ -140,7 +140,7 @@ sisallysluettelo {
 }
 .sisallysluettelo a {
   text-decoration: none;
-  color: #f4f4f4;
+  color: red;
 }
 .sisallysluettelo a:hover {
   text-decoration: underline;
