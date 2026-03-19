@@ -45,15 +45,15 @@ body {
 }
 .bottomline {
     background-color: #002F6C;
-    color: #BC002D;
+    color: white;
     padding: 0.75rem 1rem;
     font-family: "Noto Sans JP", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
     font-size: 0.9rem;
     text-shadow:
-        -1px -1px 0 black,
-         1px -1px 0 black,
-        -1px  1px 0 black,
-         1px  1px 0 black;
+        -1px -1px 0 #BC002D,
+         1px -1px 0 #BC002D,
+        -1px  1px 0 #BC002D,
+         1px  1px 0 #BC002D;
 }
 .license img {
     height: 24px;   /* Säädä tästä kokoa (esim. 18px - 30px) */
