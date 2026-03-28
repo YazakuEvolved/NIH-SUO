@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>NIH-SUO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="peli.css">
+    <link rel="canonical" href="https://nihsuo.com/hiraganapeli.html">
+
+</head>
+<body>
+<header class="topline">
+		<a href="index.html" class="logo-link">
+        	<img src="Logo.svg" alt="Sivuston logo" class="logo-small">
+    	</a>
+    <p>Nih-Suo</p>
+    	<div>
+        	<button id="theme-toggle">光 / 闇</button>
+    	</div>
+</header>
+
+<body>
+
+<h1>Hiragana Peli</h1>
+
+<div id="game">
+
+  <h2>Valitse oikea vastaus<br>
+  104 kysymystä</h2>
+
+  <!-- Kysymys -->
+  <div id="question">Kysymys tulee tähän</div>
+
+  <!-- Vastausvaihtoehdot -->
+  <div id="answers">
+    <button onclick="checkAnswer(0)" id="a0"></button>
+    <button onclick="checkAnswer(1)" id="a1"></button>
+    <button onclick="checkAnswer(2)" id="a2"></button>
+    <button onclick="checkAnswer(3)" id="a3"></button>
+  </div>
+
+  <!-- Tulos -->
+  <p id="result"></p>
+
+  <!-- Pisteet -->
+  <p id="score"></p>
+
+  <!-- Restart nappi -->
+  <button id="restart" onclick="restartGame()" style="display:none;">Pelaa uudelleen</button>
+
+</div>
+
+<script>
+
+// --- KYSYMYKSET ---
+const questions = [
+  {q: "a",answers: ["ア", "イ", "ウ", "エ"],correct: 0},
+  {q: "i",answers: ["イ", "ウ", "エ", "オ"],correct: 0},
+  {q: "u",answers: ["ウ", "エ", "オ", "ア"],correct: 0},
+  {q: "e",answers: ["エ", "オ", "ア", "イ"],correct: 0},
+  {q: "o",answers: ["オ", "ア", "イ", "ウ"],correct: 0},
+  {q: "ka",answers: ["カ", "キ", "ク", "ケ"],correct: 0},
+  {q: "ki",answers: ["キ", "ク", "ケ", "コ"],correct: 0},
+  {q: "ku",answers: ["ク", "ケ", "コ", "カ"],correct: 0},
+  {q: "ke",answers: ["ケ", "コ", "カ", "キ"],correct: 0},
+  {q: "ko",answers: ["コ", "カ", "キ", "ク"],correct: 0},
+  {q: "kya",answers: ["キャ", "キュ", "キョ", "ツョ"],correct: 0},
+  {q: "kyu",answers: ["キュ", "キョ", "ツョ", "キャ"],correct: 0},
+  {q: "kyo",answers: ["キョ", "ツョ", "キャ", "キャ"],correct: 0},
+  {q: "sa",answers: ["サ", "シ", "ス", "セ"],correct: 0},
+  {q: "shi",answers: ["シ", "ス", "セ", "ソ"],correct: 0},
+  {q: "su",answers: ["ス", "セ", "ソ", "サ"],correct: 0},
+  {q: "se",answers: ["セ", "ソ", "サ", "タ"],correct: 0},
+  {q: "so",answers: ["ソ", "サ", "シ", "ス"],correct: 0},
+  {q: "sha",answers: ["シャ", "シュ", "ショ", "ヒュ"],correct: 0},
+  {q: "shu",answers: ["シュ", "ショ", "ヒュ", "シャ"],correct: 0},
+  {q: "sho",answers: ["ショ", "ヒュ", "シャ", "シュ"],correct: 0},
+  {q: "ta",answers: ["タ", "チ", "ツ", "テ"],correct: 0},
+  {q: "chi",answers: ["チ", "ツ", "テ", "ト"],correct: 0},
+  {q: "tsu",answers: ["ツ", "テ", "ト", "タ"],correct: 0},
+  {q: "te",answers: ["テ", "ト", "タ", "チ"],correct: 0},
+  {q: "to",answers: ["ト", "タ", "チ", "ツ"],correct: 0},
+  {q: "cha",answers: ["チャ", "チュ", "チョ", "チ"],correct: 0},
+  {q: "chu",answers: ["チュ", "チャ", "チョ", "チ"],correct: 0},
+  {q: "cho",answers: ["チョ", "チャ", "チュ", "チ"],correct: 0},
+  {q: "na",answers: ["ナ", "ニ", "ヌ", "ネ"],correct: 0},
+  {q: "ni",answers: ["ニ", "ナ", "ヌ", "ネ"],correct: 0},
+  {q: "nu",answers: ["ヌ", "ナ", "ニ", "ネ"],correct: 0},
+  {q: "ne",answers: ["ネ", "ナ", "ニ", "ヌ"],correct: 0},
+  {q: "no",answers: ["ノ", "ナ", "ニ", "ヌ"],correct: 0},
+  {q: "nya",answers: ["ニャ", "ニュ", "ニョ", "ニ"],correct: 0},
+  {q: "nyu",answers: ["ニュ", "ニャ", "ニョ", "ニ"],correct: 0},
+  {q: "nyo",answers: ["ニョ", "ニャ", "ニュ", "ニ"],correct: 0},
+  {q: "ha",answers: ["ハ", "ヒ", "フ", "ヘ"],correct: 0},
+  {q: "hi",answers: ["ヒ", "ハ", "フ", "ヘ"],correct: 0},
+  {q: "fu",answers: ["フ", "ハ", "ヒ", "ヘ"],correct: 0},
+  {q: "he",answers: ["ヘ", "ハ", "ヒ", "フ"],correct: 0},
+  {q: "ho",answers: ["ホ", "ハ", "ヒ", "フ"],correct: 0},
+  {q: "hya",answers: ["ヒャ", "ヒュ", "ヒョ", "ヒ"],correct: 0},
+  {q: "hyu",answers: ["ヒュ", "ヒャ", "ヒョ", "ヒ"],correct: 0},
+  {q: "hyo",answers: ["ヒョ", "ヒャ", "ヒュ", "ヒ"],correct: 0},
+  {q: "ma",answers: ["マ", "ミ", "ム", "メ"],correct: 0},
+  {q: "mi",answers: ["ミ", "マ", "ム", "メ"],correct: 0},
+  {q: "mu",answers: ["ム", "マ", "ミ", "メ"],correct: 0},
+  {q: "me",answers: ["メ", "マ", "ミ", "ム"],correct: 0},
+  {q: "mo",answers: ["モ", "マ", "ミ", "ム"],correct: 0},
+  {q: "mya",answers: ["ミャ", "ミュ", "ミョ", "ミ"],correct: 0},
+  {q: "myu",answers: ["ミュ", "ミャ", "ミョ", "ミ"],correct: 0},
+  {q: "myo",answers: ["ミョ", "ミャ", "ミュ", "ミ"],correct: 0},
+  {q: "ya",answers: ["ヤ", "ユ", "ヨ", "ヨ"],correct: 0},
+  {q: "yu",answers: ["ユ", "ヤ", "ヨ", "ヨ"],correct: 0},
+  {q: "yo",answers: ["ヨ", "ヤ", "ユ", "ユ"],correct: 0},
+  {q: "ra",answers: ["ラ", "リ", "ル", "レ"],correct: 0},
+  {q: "ri",answers: ["リ", "ラ", "ル", "レ"],correct: 0},
+  {q: "ru",answers: ["ル", "ラ", "リ", "レ"],correct: 0},
+  {q: "re",answers: ["レ", "ラ", "リ", "ル"],correct: 0},
+  {q: "ro",answers: ["ロ", "ラ", "リ", "ル"],correct: 0},
+  {q: "rya",answers: ["リャ", "リュ", "リョ", "リ"],correct: 0},
+  {q: "ryu",answers: ["リュ", "リャ", "リョ", "リ"],correct: 0},
+  {q: "ryo",answers: ["リョ", "リャ", "リュ", "リ"],correct: 0},
+  {q: "wa",answers: ["ワ", "ヲ", "ン", "ナ"],correct: 0},
+  {q: "o/wo",answers: ["ヲ", "ワ", "オ", "ノ"],correct: 0},
+  {q: "n",answers: ["ン", "ナ", "ニ", "ヌ"],correct: 0},
+  {q: "ga",answers: ["ガ", "カ", "ギ", "ゲ"],correct: 0},
+  {q: "gi",answers: ["ギ", "ガ", "グ", "ゲ"],correct: 0},
+  {q: "gu",answers: ["グ", "ガ", "ギ", "ゲ"],correct: 0},
+  {q: "ge",answers: ["ゲ", "ガ", "ギ", "グ"],correct: 0},
+  {q: "go",answers: ["ゴ", "ガ", "ギ", "グ"],correct: 0},
+  {q: "gya",answers: ["ギャ", "ギュ", "ギョ", "ギ"],correct: 0},
+  {q: "gyu",answers: ["ギュ", "ギャ", "ギョ", "ギ"],correct: 0},
+  {q: "gyo",answers: ["ギョ", "ギャ", "ギュ", "ギ"],correct: 0},
+  {q: "za",answers: ["ザ", "サ", "ジ", "ゼ"],correct: 0},
+  {q: "ji",answers: ["ジ", "ザ", "ズ", "ゼ"],correct: 0},
+  {q: "zu",answers: ["ズ", "ザ", "ジ", "ゼ"],correct: 0},
+  {q: "ze",answers: ["ゼ", "ザ", "ジ", "ズ"],correct: 0},
+  {q: "zo",answers: ["ゾ", "ザ", "ジ", "ズ"],correct: 0},
+  {q: "ja",answers: ["ジャ", "ジュ", "ジョ", "ジ"],correct: 0},
+  {q: "ju",answers: ["ジュ", "ジャ", "ジョ", "ジ"],correct: 0},
+  {q: "jo",answers: ["ジョ", "ジャ", "ジュ", "ジ"],correct: 0},
+  {q: "da",answers: ["ダ", "タ", "ヂ", "デ"],correct: 0},
+  {q: "ji",answers: ["ヂ", "ジ", "ダ", "デ"],correct: 0},
+  {q: "zu",answers: ["ヅ", "ズ", "ダ", "ド"],correct: 0},
+  {q: "de",answers: ["デ", "ダ", "ド", "テ"],correct: 0},
+  {q: "do",answers: ["ド", "ダ", "デ", "ト"],correct: 0},
+  {q: "ba",answers: ["バ", "パ", "ビ", "ブ"],correct: 0},
+  {q: "bi",answers: ["ビ", "バ", "ブ", "ベ"],correct: 0},
+  {q: "bu",answers: ["ブ", "バ", "ビ", "ベ"],correct: 0},
+  {q: "be",answers: ["ベ", "バ", "ビ", "ブ"],correct: 0},
+  {q: "bo",answers: ["ボ", "バ", "ビ", "ブ"],correct: 0},
+  {q: "bya",answers: ["ビャ", "ビュ", "ビョ", "ビ"],correct: 0},
+  {q: "byu",answers: ["ビュ", "ビャ", "ビョ", "ビ"],correct: 0},
+  {q: "byo",answers: ["ビョ", "ビャ", "ビュ", "ビ"],correct: 0},
+  {q: "pa",answers: ["パ", "バ", "ピ", "プ"],correct: 0},
+  {q: "pi",answers: ["ピ", "パ", "プ", "ペ"],correct: 0},
+  {q: "pu",answers: ["プ", "パ", "ピ", "ペ"],correct: 0},
+  {q: "pe",answers: ["ペ", "パ", "ピ", "プ"],correct: 0},
+  {q: "po",answers: ["ポ", "パ", "ピ", "プ"],correct: 0},
+  {q: "pya",answers: ["ピャ", "ピュ", "ピョ", "ピ"],correct: 0},
+  {q: "pyu",answers: ["ピュ", "ピャ", "ピョ", "ピ"],correct: 0},
+  {q: "pyo",answers: ["ピョ", "ピャ", "ピュ", "ピ"],correct: 0}
+
+];
+
+
+// --- SEKOITUSFUNKTIOT ---
+
+function shuffleArray(array) {
+  let newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
+
+function shuffleQuestion(question) {
+  const answers = [...question.answers];
+  const correctAnswer = answers[question.correct];
+
+  const shuffledAnswers = shuffleArray(answers);
+  const newCorrectIndex = shuffledAnswers.indexOf(correctAnswer);
+
+  return {
+    ...question,
+    answers: shuffledAnswers,
+    correct: newCorrectIndex
+  };
+}
+
+
+// --- SEKOITETTU KYSYMYSLISTA ---
+
+let shuffledQuestions = [];
+
+function prepareGame() {
+  shuffledQuestions = shuffleArray(
+    questions.map(q => shuffleQuestion(q))
+  );
+}
+
+
+// --- PELIN MUUTTUJAT ---
+
+let currentQuestion = 0;
+let score = 0;
+
+
+// --- NÄYTÄ KYSYMYS ---
+
+function showQuestion() {
+  let q = shuffledQuestions[currentQuestion];
+
+  document.getElementById("question").innerText = q.q;
+
+  for (let i = 0; i < 4; i++) {
+    document.getElementById("a"+i).innerText = q.answers[i];
+  }
+
+  document.getElementById("result").innerText = "";
+}
+
+
+// --- TARKISTA VASTAUS ---
+
+function checkAnswer(i) {
+  let q = shuffledQuestions[currentQuestion];
+
+  if (i === q.correct) {
+    document.getElementById("result").innerText = "Maru! ⭕";
+    score++;
+  } else {
+    document.getElementById("result").innerText = "Batsu ❎";
+  }
+
+  currentQuestion++;
+
+  if (currentQuestion < shuffledQuestions.length) {
+    setTimeout(showQuestion, 1000);
+  } else {
+    document.getElementById("question").innerText = "Peli loppui!";
+    document.getElementById("answers").style.display = "none";
+
+    let finalMessage = "";
+    if (score === shuffledQuestions.length) finalMessage = "Maru! ⭕";
+    else if (score === 0) finalMessage = "Batsu ❎";
+    else finalMessage = "Sankaku 🔺";
+
+    document.getElementById("score").innerText =
+      finalMessage + " — Sait " + score + " / " + shuffledQuestions.length + " pistettä.";
+
+    document.getElementById("restart").style.display = "block";
+  }
+}
+
+
+// --- RESTART ---
+
+function restartGame() {
+  currentQuestion = 0;
+  score = 0;
+
+  prepareGame(); // 🔥 tärkeä
+
+  document.getElementById("answers").style.display = "block";
+  document.getElementById("restart").style.display = "none";
+  document.getElementById("score").innerText = "";
+
+  showQuestion();
+}
+
+
+// --- ALOITUS ---
+
+prepareGame();
+showQuestion();
+
+
+</script>
+    <p>
+        <a href="kielioppi.html">← Takaisin kielioppi sivulle</a>
+    </p>
+    <p>
+        <a href="index.html">← Takaisin etusivulle</a>
+    </p>
+</main>
+<footer  class="bottomline">
+    <p>© 2026 Lyytikäinen Aki. All rights reserved.</p>
+</footer>
+<script>
+    const toggleButton = document.getElementById('theme-toggle');
+
+    // Lataa tallennettu teema
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+    }
+
+    toggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+
+        if (document.body.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+</script>
+</body>
+</html>
