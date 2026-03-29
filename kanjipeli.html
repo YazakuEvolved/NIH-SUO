@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>NIH-SUO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="peli.css">
+    <link rel="canonical" href="https://nihsuo.com/kanjipeli.html">
+
+</head>
+<body>
+<header class="topline">
+		<a href="index.html" class="logo-link">
+        	<img src="Logo.svg" alt="Sivuston logo" class="logo-small">
+    	</a>
+    <p>Nih-Suo</p>
+    	<div>
+        	<button id="theme-toggle">光 / 闇</button>
+    	</div>
+</header>
+
+<body>
+
+<h1>Kanji Peli</h1>
+
+<div id="game">
+
+  <h2>Valitse oikea vastaus</h2>
+
+<p>Valitse kysymysten määrä:</p>
+<select id="questionCount">
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="20">20</option>
+  <option value="all">Kaikki kysymykset</option>
+</select>
+
+<button onclick="startGame()">Aloita peli</button>
+
+<div id="progressContainer">
+  <div id="progressBar"></div>
+</div>
+
+<p id="progressText"></p>
+
+  <!-- Kysymys -->
+  <div id="question">Kysymys tulee tähän</div>
+
+  <!-- Vastausvaihtoehdot -->
+  <div id="answers">
+    <button onclick="checkAnswer(0)" id="a0"></button>
+    <button onclick="checkAnswer(1)" id="a1"></button>
+    <button onclick="checkAnswer(2)" id="a2"></button>
+    <button onclick="checkAnswer(3)" id="a3"></button>
+  </div>
+
+  <!-- Tulos -->
+  <p id="result"></p>
+
+  <!-- Pisteet -->
+  <p id="score"></p>
+
+  <!-- Restart nappi -->
+  <button id="restart" onclick="restartGame()" style="display:none;">Pelaa uudelleen</button>
+
+</div>
+
+<script>
+
+// --- KYSYMYKSET ---
+const questions = [
+  {q: "Kun: kanjille 日",answers: ["ジツ", "ひ", "はな", "きづ"],correct: 1},
+  {q: "On: kanjille 日",answers: ["か", "なぢ", "ニチ", "づ"],correct: 2},
+  {q: "Kanji 日 suomeksi",answers: ["pohjoinen", "ruoka", "päivä", "pöytä"],correct: 2},
+  {q: "Kun: kanjille 月",answers: ["つき", "か", "はな", "きづ"],correct: 0},
+  {q: "On: kanjille 月",answers: ["つか", "なぢ", "みぢ", "ゲツ"],correct: 3},
+  {q: "Kanji 月 suomeksi",answers: ["uusi", "vesi", "riisi", "kuu"],correct: 3},
+  {q: "Kun: kanjille 木",answers: ["つ", "か", "き", "きづ"],correct: 2},
+  {q: "On: kanjille 木",answers: ["つか", "なぢ", "みぢ", "ボク"],correct: 3},
+  {q: "Kanji 木 suomeksi",answers: ["puu", "vesi", "riisi", "tee"],correct: 0},
+  {q: "Kun: kanjille 山",answers: ["つ", "か", "やま", "きづ"],correct: 2},
+  {q: "On: kanjille 山",answers: ["つか", "なぢ", "サン", "つ"],correct: 2},
+  {q: "Kanji 山 suomeksi",answers: ["joki", "mäki", "riisi", "vuori"],correct: 3},
+  {q: "Kun: kanjille 川",answers: ["かわ", "ヒト", "み", "コン"],correct: 0},
+  {q: "On: kanjille 川",answers: ["セン", "コン", "ヒト", "み"],correct: 0},
+  {q: "Kanji 川 suomeksi",answers: ["joki", "mäki", "riisi", "metsä"],correct: 0},
+  {q: "Kun: kanjille 田", answers: ["た", "でん", "い", "の"],correct: 0},
+  {q: "On: kanjille 田",answers: ["デン", "テン", "トウ", "タ"],correct: 0},
+  {q: "Kanji 田 suomeksi",answers: ["riisi", "taulu", "metsä", "riisipelto"],correct: 3},
+  {q: "Kun: kanjille 人",answers: ["ひと", "じん", "にん", "ひ"],correct: 0},
+  {q: "On: kanjille 人",answers: ["ジン", "ケン", "ヒト", "ヒ"],correct: 0},
+  {q: "Kanji 人 suomeksi",answers: ["lapsi", "ihminen", "portti", "auto"],correct: 1},
+  {q: "Kun: kanjille 口",answers: ["くち", "こう", "く", "こ"],correct: 0},
+  {q: "On: kanjille 口",answers: ["コウ", "クチ", "ク", "コ"],correct: 0},
+  {q: "Kanji 口 suomeksi",answers: ["suu", "silmä", "korva", "käsi"],correct: 0},
+  {q: "Kun: kanjille 車",answers: ["くるま", "しゃ", "じ", "か"],correct: 0},
+  {q: "On: kanjille 車",answers: ["シャ", "カ", "ジュ", "ケ"],correct: 0},
+  {q: "Kanji 車 suomeksi",answers: ["vene", "juna", "auto", "pyörä"],correct: 2},
+  {q: "Kun: kanjille 門",answers: ["もん", "かど", "ジュ", "も"],correct: 1},
+  {q: "On: kanjille 門",answers: ["モン", "カド", "モ", "ト"],correct: 0},
+  {q: "Kanji 門 suomeksi",answers: ["talo", "ovi", "ikkuna", "portti"],correct: 3},
+  {q: "Kun: kanjille 火",answers: ["ひ", "へ", "か", "た"],correct: 0},
+  {q: "On: kanjille 火",answers: ["カ", "ヒ", "ホ", "タ"],correct: 0},
+  {q: "Kanji 火 suomeksi",answers: ["maa", "vesi", "tuli", "ilma"],correct: 2},
+  {q: "Kun: kanjille 水",answers: ["みず", "すい", "み", "う"],correct: 0},
+  {q: "On: kanjille 水",answers: ["スイ", "ケン", "ミ", "ウ"],correct: 0},
+  {q: "Kanji 水 suomeksi",answers: ["vesi", "tuli", "metalli", "puu"],correct: 0},
+  {q: "Kun: kanjille 金",answers: ["かね", "きん", "こん", "く"],correct: 0},
+  {q: "On: kanjille 金",answers: ["キン", "マナブ", "カネ", "ク"],correct: 0},
+  {q: "Kanji 金 suomeksi",answers: ["pronssi", "hopea", "kulta", "maa"],correct: 2},
+  {q: "Kun: kanjille 土",answers: ["つち", "ど", "と", "た"],correct: 0},
+  {q: "On: kanjille 土",answers: ["ド", "し", "ツチ", "タ"],correct: 0},
+  {q: "Kanji 土 suomeksi",answers: ["vesi", "maa", "tuli", "ilma"],correct: 1},
+  {q: "Kun: kanjille 子",answers: ["こ", "し", "す", "そ"],correct: 0},
+  {q: "On: kanjille 子",answers: ["シ", "コ", "じょ", "ソ"],correct: 0},
+  {q: "Kanji 子 suomeksi",answers: ["poika", "tyttö", "lapsi", "vanhempi"],correct: 2},
+  {q: "Kun: kanjille 女",answers: ["おんな", "じょ", "にょ", "メ"],correct: 0},
+  {q: "On: kanjille 女",answers: ["ジョ", "デン", "オンナ", "メ"],correct: 0},
+  {q: "Kanji 女 suomeksi",answers: ["tyttö", "nainen", "lapsi", "äiti"],correct: 1},
+  {q: "Kun: kanjille 学",answers: ["まなぶ", "がく", "がっ", "まな"],correct: 0},
+  {q: "On: kanjille 学",answers: ["ガク", "マナブ", "ガッ", "マナ"],correct: 0},
+  {q: "Kanji 学 suomeksi",answers: ["kirja", "oppi", "koulu", "opiskella"],correct: 3},
+  {q: "Kun: kanjille 生",answers: ["いきる", "せい", "しょう", "えき"],correct: 0},
+  {q: "On: kanjille 生",answers: ["セイ", "マナブ", "イキル", "ウ"],correct: 0},
+  {q: "Kanji 生 suomeksi",answers: ["elämä", "kivi", "pilvi", "lanka"],correct: 0},
+  {q: "Kun: kanjille 先",answers: ["さき", "せん", "せ", "さ"],correct: 0},
+  {q: "On: kanjille 先",answers: ["セン", "サキ", "セ", "サ"],correct: 0},
+  {q: "Kanji 先 suomeksi",answers: ["loppu", "ennen", "alku", "koti"],correct: 1},
+  {q: "Kun: kanjille 私",answers: ["わたし", "し", "わた", "た"],correct: 0},
+  {q: "On: kanjille 私",answers: ["シ", "ワタシ", "ワタ", "タ"],correct: 0},
+  {q: "Kanji 私 suomeksi",answers: ["minä", "sinä", "hän", "me"],correct: 0},
+  {q: "Kun: kanjille 一", answers: ["ひとつ", "ふたつ", "みっつ", "よっつ"], correct: 0},
+  {q: "On: kanjille 一", answers: ["イチ", "ニ", "サン", "シ"], correct: 0},
+  {q: "Kanji 一 suomeksi", answers: ["yksi", "kaksi", "kolme", "neljä"], correct: 0},
+  {q: "Kun: kanjille 二", answers: ["ふたつ", "ひとつ", "みっつ", "むっつ"], correct: 0},
+  {q: "On: kanjille 二", answers: ["ニ", "イチ", "サン", "ゴ"], correct: 0},
+  {q: "Kanji 二 suomeksi", answers: ["kaksi", "yksi", "kolme", "viisi"], correct: 0},
+  {q: "Kun: kanjille 三", answers: ["みっつ", "ひとつ", "よっつ", "ここのつ"], correct: 0},
+  {q: "On: kanjille 三", answers: ["サン", "ニ", "ロク", "ハチ"], correct: 0},
+  {q: "Kanji 三 suomeksi", answers: ["kolme", "kaksi", "neljä", "yhdeksän"], correct: 0},
+  {q: "Kun: kanjille 四", answers: ["よっつ", "みっつ", "むっつ", "とお"], correct: 0},
+  {q: "On: kanjille 四", answers: ["シ", "サン", "ゴ", "キュウ"], correct: 0},
+  {q: "Kanji 四 suomeksi", answers: ["neljä", "kolme", "viisi", "kahdeksan"], correct: 0},
+  {q: "Kun: kanjille 五", answers: ["いつつ", "ひとつ", "ふたつ", "ななつ"], correct: 0},
+  {q: "On: kanjille 五", answers: ["ゴ", "シ", "ロク", "ハチ"], correct: 0},
+  {q: "Kanji 五 suomeksi", answers: ["viisi", "neljä", "kuusi", "seitsemän"], correct: 0},
+  {q: "Kun: kanjille 六", answers: ["むっつ", "よっつ", "ここのつ", "とお"], correct: 0},
+  {q: "On: kanjille 六", answers: ["ロク", "ゴ", "ナナ", "キュウ"], correct: 0},
+  {q: "Kanji 六 suomeksi", answers: ["kuusi", "viisi", "yhdeksän", "kymmenen"], correct: 0},
+  {q: "Kun: kanjille 七", answers: ["ななつ", "むっつ", "いつつ", "ふたつ"], correct: 0},
+  {q: "On: kanjille 七", answers: ["シチ", "ロク", "ハチ", "ジュウ"], correct: 0},
+  {q: "Kanji 七 suomeksi", answers: ["seitsemän", "kuusi", "kahdeksan", "kymmenen"], correct: 0},
+  {q: "Kun: kanjille 八", answers: ["やっつ", "ななつ", "みっつ", "ここのつ"], correct: 0},
+  {q: "On: kanjille 八", answers: ["ハチ", "シチ", "キュウ", "ニ"], correct: 0},
+  {q: "Kanji 八 suomeksi", answers: ["kahdeksan", "seitsemän", "yhdeksän", "kaksi"], correct: 0},
+  {q: "Kun: kanjille 九", answers: ["ここのつ", "やっつ", "とお", "むっつ"], correct: 0},
+  {q: "On: kanjille 九", answers: ["キュウ", "ハチ", "ジュウ", "ゴ"], correct: 0},
+  {q: "Kanji 九 suomeksi", answers: ["yhdeksän", "kahdeksan", "kymmenen", "viisi"], correct: 0},
+  {q: "Kun: kanjille 十", answers: ["とお", "ここのつ", "ふたつ", "みっつ"], correct: 0},
+  {q: "On: kanjille 十", answers: ["ジュウ", "キュウ", "ニ", "サン"], correct: 0},
+  {q: "Kanji 十 suomeksi", answers: ["kymmenen", "yhdeksän", "kaksi", "kolme"], correct: 0},
+  {q: "Kun: kanjille 百", answers: ["もも", "とお", "ななつ", "むっつ"], correct: 0},
+  {q: "On: kanjille 百", answers: ["ヒャク", "セン", "マン", "ゴ"], correct: 0},
+  {q: "Kanji 百 suomeksi", answers: ["sata", "tuhat", "kymmenentuhatta", "viisi"], correct: 0},
+  {q: "Kun: kanjille 千", answers: ["ち", "もも", "なかば", "あいだ"], correct: 0},
+  {q: "On: kanjille 千", answers: ["セン", "マン", "ヒャク", "チョウ"], correct: 0},
+  {q: "Kanji 千 suomeksi", answers: ["tuhat", "sata", "kymmenentuhatta", "pitkä"], correct: 0},
+  {q: "Kun: kanjille 万", answers: ["よろず", "ち", "とし", "すき"], correct: 0},
+  {q: "On: kanjille 万", answers: ["マン", "セン", "エン", "ダイ"], correct: 0},
+  {q: "Kanji 万 suomeksi", answers: ["kymmenentuhatta", "tuhat", "vuosi", "voima"], correct: 0},
+  {q: "Kun: kanjille 円", answers: ["まるい", "よろず", "おおきい", "やすい"], correct: 0},
+  {q: "On: kanjille 円", answers: ["エン", "マン", "アン", "カ"], correct: 0},
+  {q: "Kanji 円 suomeksi", answers: ["jeni", "vuosi", "halpa", "pyöreä"], correct: 0},
+  {q: "Kun: kanjille 年", answers: ["とし", "なか", "あかるい", "くらい"], correct: 0},
+  {q: "On: kanjille 年", answers: ["ネン", "エン", "チュウ", "ショウ"], correct: 0},
+  {q: "Kanji 年 suomeksi", answers: ["vuosi", "sisällä", "pimeä", "vähän"], correct: 0},
+  {q: "Kun: kanjille 上", answers: ["うえ", "した", "なか", "そら"], correct: 0},
+  {q: "On: kanjille 上", answers: ["ジョウ", "カ", "チュウ", "アン"], correct: 0},
+  {q: "Kanji 上 suomeksi", answers: ["ylhäällä", "alhaalla", "sisällä", "halpa"], correct: 0},
+  {q: "Kun: kanjille 下", answers: ["した", "うえ", "そと", "なか"], correct: 0},
+  {q: "On: kanjille 下", answers: ["カ", "ジョウ", "チュウ", "ショウ"], correct: 0},
+  {q: "Kanji 下 suomeksi", answers: ["alhaalla", "ylhäällä", "sisällä", "pieni"], correct: 0},
+  {q: "Kun: kanjille 中", answers: ["なか", "そと", "うえ", "した"], correct: 0},
+  {q: "On: kanjille 中", answers: ["チュウ", "ジョウ", "カ", "ダイ"], correct: 0},
+  {q: "Kanji 中 suomeksi", answers: ["sisällä", "ulkona", "ylhäällä", "iso"], correct: 0},
+  {q: "Kun: kanjille 大", answers: ["おおきい", "ちいさい", "ながい", "やすい"], correct: 0},
+  {q: "On: kanjille 大", answers: ["ダイ", "ショウ", "チョウ", "アン"], correct: 0},
+  {q: "Kanji 大 suomeksi", answers: ["iso", "pieni", "pitkä", "halpa"], correct: 0},
+  {q: "Kun: kanjille 小", answers: ["ちいさい", "おおきい", "みじかい", "すくない"], correct: 0},
+  {q: "On: kanjille 小", answers: ["ショウ", "ダイ", "チョウ", "タ"], correct: 0},
+  {q: "Kanji 小 suomeksi", answers: ["pieni", "iso", "vähän", "pitkä"], correct: 0},
+  {q: "Kun: kanjille 本", answers: ["もと", "はやし", "からだ", "あざ"], correct: 0},
+  {q: "On: kanjille 本", answers: ["ホン", "リン", "タイ", "ジ"], correct: 0},
+  {q: "Kanji 本 suomeksi", answers: ["kirja", "metsä", "keho", "kirjain"], correct: 0},
+  {q: "Kun: kanjille 半", answers: ["なかば", "もと", "あいだ", "すき"], correct: 0},
+  {q: "On: kanjille 半", answers: ["ハン", "ホン", "カン", "アン"], correct: 0},
+  {q: "Kanji 半 suomeksi", answers: ["puoli", "kirja", "väli", "halpa"], correct: 0},
+  {q: "Kun: kanjille 分", answers: ["わける", "なかば", "あざ", "からだ"], correct: 0},
+  {q: "On: kanjille 分", answers: ["ブン", "ハン", "ジ", "タイ"], correct: 0},
+  {q: "Kanji 分 suomeksi", answers: ["jakaa, osa", "puoli", "kirjain", "keho"], correct: 0},
+  {q: "Kun: kanjille 力", answers: ["ちから", "て", "からだ", "いし"], correct: 0},
+  {q: "On: kanjille 力", answers: ["リョク", "シュ", "タイ", "セキ"], correct: 0},
+  {q: "Kanji 力 suomeksi", answers: ["voima", "käsi", "kivi", "keho"], correct: 0},
+  {q: "Kun: kanjille 何", answers: ["なに", "なか", "あめ", "すくない"], correct: 0},
+  {q: "On: kanjille 何", answers: ["カ", "チュウ", "ウ", "ショウ"], correct: 0},
+  {q: "Kanji 何 suomeksi", answers: ["mikä", "sisällä", "sade", "vähän"], correct: 0},
+  {q: "Kun: kanjille 明", answers: ["あかるい", "くらい", "おおきい", "やすい"], correct: 0},
+  {q: "On: kanjille 明", answers: ["メイ", "アン", "ダイ", "コウ"], correct: 0},
+  {q: "Kanji 明 suomeksi", answers: ["kirkas", "pimeä", "iso", "halpa"], correct: 0},
+  {q: "Kun: kanjille 休", answers: ["やすむ", "すき", "あたらしい", "ふるい"], correct: 0},
+  {q: "On: kanjille 休", answers: ["キュウ", "コウ", "シン", "コ"], correct: 0},
+  {q: "Kanji 休 suomeksi", answers: ["lepo", "tykkää", "uusi", "vanha"], correct: 0},
+  {q: "Kun: kanjille 体", answers: ["からだ", "て", "ちから", "あざ"], correct: 0},
+  {q: "On: kanjille 体", answers: ["タイ", "シュ", "リョク", "ジ"], correct: 0},
+  {q: "Kanji 体 suomeksi", answers: ["keho", "käsi", "voima", "kirjain"], correct: 0},
+  {q: "Kun: kanjille 好", answers: ["このむ", "やすむ", "あかるい", "みじかい"], correct: 0},
+  {q: "On: kanjille 好", answers: ["コウ", "キュウ", "メイ", "タン"], correct: 0},
+  {q: "Kanji 好 suomeksi", answers: ["tykätä", "lepo", "kirkas", "lyhyt"], correct: 0},
+  {q: "Kun: kanjille 男", answers: ["おとこ", "おんな", "からだ", "いし"], correct: 0},
+  {q: "On: kanjille 男", answers: ["ダン", "ジョ", "タイ", "セキ"], correct: 0},
+  {q: "Kanji 男 suomeksi", answers: ["mies", "nainen", "keho", "kivi"], correct: 0},
+  {q: "Kun: kanjille 林", answers: ["はやし", "もり", "かわ", "たけ"], correct: 0},
+  {q: "On: kanjille 林", answers: ["リン", "シン", "セン", "チク"], correct: 0},
+  {q: "Kanji 林 suomeksi", answers: ["metsikkö", "metsä", "joki", "bambu"], correct: 0},
+  {q: "Kun: kanjille 森", answers: ["もり", "はやし", "かわ", "いわ"], correct: 0},
+  {q: "On: kanjille 森", answers: ["シン", "リン", "セキ", "チク"], correct: 0},
+  {q: "Kanji 森 suomeksi", answers: ["metsä", "lehto", "joki", "kallio"], correct: 0},
+  {q: "Kun: kanjille 間", answers: ["あいだ", "なか", "うえ", "した"], correct: 0},
+  {q: "On: kanjille 間", answers: ["カン", "チュウ", "ジョウ", "アン"], correct: 0},
+  {q: "Kanji 間 suomeksi", answers: ["väli", "sisällä", "ylhäällä", "pimeä"], correct: 0},
+  {q: "Kun: kanjille 畑", answers: ["はたけ", "チュウ", "いし", "こめ"], correct: 0},
+  {q: "Kanji 畑 suomeksi", answers: ["pelto", "bambu", "kivi", "riisi"], correct: 0},
+  {q: "Kun: kanjille 岩", answers: ["いわ", "いし", "もり", "かわ"], correct: 0},
+  {q: "On: kanjille 岩", answers: ["ガン", "セキ", "シン", "セン"], correct: 0},
+  {q: "Kanji 岩 suomeksi", answers: ["kallio", "planeetta", "metsä", "joki"], correct: 0},
+  {q: "Kun: kanjille 目", answers: ["め", "みみ", "て", "あし"], correct: 0},
+  {q: "On: kanjille 目", answers: ["モク", "ジ", "シュ", "ソク"], correct: 0},
+  {q: "Kanji 目 suomeksi", answers: ["silmä", "korva", "käsi", "jalka"], correct: 0},
+  {q: "Kun: kanjille 耳", answers: ["みみ", "め", "て", "あし"], correct: 0},
+  {q: "On: kanjille 耳", answers: ["ジ", "モク", "シュ", "ソク"], correct: 0},
+  {q: "Kanji 耳 suomeksi", answers: ["korva", "silmä", "käsi", "jalka"], correct: 0},
+  {q: "Kun: kanjille 手", answers: ["て", "あし", "みみ", "め"], correct: 0},
+  {q: "On: kanjille 手", answers: ["シュ", "ソク", "ジ", "モク"], correct: 0},
+  {q: "Kanji 手 suomeksi", answers: ["käsi", "jalka", "korva", "silmä"], correct: 0},
+  {q: "Kun: kanjille 足", answers: ["あし", "て", "め", "みみ"], correct: 0},
+  {q: "On: kanjille 足", answers: ["ソク", "シュ", "モク", "ジ"], correct: 0},
+  {q: "Kanji 足 suomeksi", answers: ["jalka", "käsi", "silmä", "korva"], correct: 0},
+  {q: "Kun: kanjille 雨", answers: ["あめ", "ゆき", "かわ", "はな"], correct: 0},
+  {q: "On: kanjille 雨", answers: ["ウ", "セキ", "カ", "チュウ"], correct: 0},
+  {q: "Kanji 雨 suomeksi", answers: ["sade", "lumi", "joki", "kukka"], correct: 0},
+  {q: "Kun: kanjille 竹", answers: ["たけ", "はやし", "こめ", "いと"], correct: 0},
+  {q: "On: kanjille 竹", answers: ["チク", "リン", "ベイ", "シ"], correct: 0},
+  {q: "Kanji 竹 suomeksi", answers: ["bambu", "lehto", "riisi", "lanka"], correct: 0},
+  {q: "Kun: kanjille 米", answers: ["こめ", "いと", "たけ", "はな"], correct: 0},
+  {q: "On: kanjille 米", answers: ["ベイ", "シ", "チク", "カ"], correct: 0},
+  {q: "Kanji 米 suomeksi", answers: ["riisi", "lanka", "bambu", "kukka"], correct: 0},
+  {q: "Kun: kanjille 貝", answers: ["かい", "こめ", "いし", "さかな"], correct: 0},
+  {q: "On: kanjille 貝", answers: ["バイ", "ベイ", "セキ", "ギョ"], correct: 0},
+  {q: "Kanji 貝 suomeksi", answers: ["äyriäinen", "riisi", "kivi", "kala"], correct: 0},
+  {q: "Kun: kanjille 石", answers: ["いし", "いわ", "こめ", "はたけ"], correct: 0},
+  {q: "On: kanjille 石", answers: ["セキ", "ガン", "ベイ", "マン"], correct: 0},
+  {q: "Kanji 石 suomeksi", answers: ["kivi", "kallio", "riisi", "pelto"], correct: 0},
+  {q: "Kun: kanjille 糸", answers: ["いと", "こめ", "はな", "いし"], correct: 0},
+  {q: "On: kanjille 糸", answers: ["シ", "ベイ", "カ", "セキ"], correct: 0},
+  {q: "Kanji 糸 suomeksi", answers: ["lanka", "riisi", "kukka", "kivi"], correct: 0},
+  {q: "Kun: kanjille 花", answers: ["はな", "いと", "たけ", "あめ"], correct: 0},
+  {q: "On: kanjille 花", answers: ["カ", "シ", "チク", "ウ"], correct: 0},
+  {q: "Kanji 花 suomeksi", answers: ["kukka", "lanka", "bambu", "sade"], correct: 0},
+  {q: "On: kanjille 茶", answers: ["チャ", "カ", "シ", "ベイ"], correct: 0},
+  {q: "Kanji 茶 suomeksi", answers: ["tee", "kukka", "lanka", "riisi"], correct: 0},
+  {q: "Kun: kanjille 肉", answers: ["しし", "うし", "さかな", "とり"], correct: 0},
+  {q: "On: kanjille 肉", answers: ["ニク", "ギュウ", "ギョ", "チョウ"], correct: 0},
+  {q: "Kanji 肉 suomeksi", answers: ["liha", "lehmä", "kala", "lintu"], correct: 0},
+  {q: "Kun: kanjille 字", answers: ["あざ", "からだ", "なか", "すき"], correct: 0},
+  {q: "On: kanjille 字", answers: ["ジ", "タイ", "チュウ", "コウ"], correct: 0},
+  {q: "Kanji 字 suomeksi", answers: ["kirjain", "keho", "sisällä", "tykkää"], correct: 0},
+  {q: "Kun: kanjille 物", answers: ["もの", "かい", "こめ", "いし"], correct: 0},
+  {q: "On: kanjille 物", answers: ["ブツ", "バイ", "ベイ", "セキ"], correct: 0},
+  {q: "Kanji 物 suomeksi", answers: ["esine", "nilviäinen", "riisi", "kivi"], correct: 0},
+  {q: "Kun: kanjille 牛", answers: ["うし", "うま", "とり", "さかな"], correct: 0},
+  {q: "On: kanjille 牛", answers: ["ギュウ", "バ", "チョウ", "ギョ"], correct: 0},
+  {q: "Kanji 牛 suomeksi", answers: ["lehmä", "hevonen", "lintu", "kala"], correct: 0},
+  {q: "Kun: kanjille 馬", answers: ["うま", "うし", "とり", "さかな"], correct: 0},
+  {q: "On: kanjille 馬", answers: ["バ", "ギュウ", "チョウ", "ギョ"], correct: 0},
+  {q: "Kanji 馬 suomeksi", answers: ["hevonen", "lehmä", "lintu", "kala"], correct: 0},
+  {q: "Kun: kanjille 鳥", answers: ["とり", "さかな", "うま", "うし"], correct: 0},
+  {q: "On: kanjille 鳥", answers: ["チョウ", "ギョ", "バ", "ギュウ"], correct: 0},
+  {q: "Kanji 鳥 suomeksi", answers: ["lintu", "kala", "hevonen", "lehmä"], correct: 0},
+  {q: "Kun: kanjille 魚", answers: ["さかな", "とり", "うし", "こめ"], correct: 0},
+  {q: "On: kanjille 魚", answers: ["ギョ", "チョウ", "ギュウ", "ベイ"], correct: 0},
+  {q: "Kanji 魚 suomeksi", answers: ["kala", "lintu", "lehmä", "riisi"], correct: 0},
+  {q: "Kun: kanjille 新", answers: ["あたらしい", "ふるい", "ながい", "くらい"], correct: 0},
+  {q: "On: kanjille 新", answers: ["シン", "コ", "チョウ", "アン"], correct: 0},
+  {q: "Kanji 新 suomeksi", answers: ["uusi", "vanha", "pitkä", "pimeä"], correct: 0},
+  {q: "Kun: kanjille 古", answers: ["ふるい", "あたらしい", "すくない", "おおい"], correct: 0},
+  {q: "On: kanjille 古", answers: ["コ", "シン", "ショウ", "タ"], correct: 0},
+  {q: "Kanji 古 suomeksi", answers: ["vanha", "uusi", "vähän", "paljon"], correct: 0},
+  {q: "Kun: kanjille 長", answers: ["ながい", "みじかい", "たかい", "ひくい"], correct: 0},
+  {q: "On: kanjille 長", answers: ["チョウ", "タン", "コウ", "テイ"], correct: 0},
+  {q: "Kanji 長 suomeksi", answers: ["pitkä", "lyhyt", "korkea", "matala"], correct: 0},
+  {q: "Kun: kanjille 短", answers: ["みじかい", "ながい", "ひくい", "おおきい"], correct: 0},
+  {q: "On: kanjille 短", answers: ["タン", "チョウ", "テイ", "ダイ"], correct: 0},
+  {q: "Kanji 短 suomeksi", answers: ["lyhyt", "pitkä", "matala", "iso"], correct: 0},
+  {q: "Kun: kanjille 高", answers: ["たかい", "ひくい", "やすい", "くらい"], correct: 0},
+  {q: "On: kanjille 高", answers: ["コウ", "テイ", "アン", "アン"], correct: 0},
+  {q: "Kanji 高 suomeksi", answers: ["korkea", "matala", "halpa", "pimeä"], correct: 0},
+  {q: "Kun: kanjille 安", answers: ["やすい", "たかい", "くらい", "あかるい"], correct: 0},
+  {q: "On: kanjille 安", answers: ["アン", "コウ", "メイ", "アン"], correct: 0},
+  {q: "Kanji 安 suomeksi", answers: ["halpa, rauhallinen", "korkea", "kirkas", "pimeä"], correct: 0},
+  {q: "Kun: kanjille 低", answers: ["ひくい", "たかい", "みじかい", "おおきい"], correct: 0},
+  {q: "On: kanjille 低", answers: ["テイ", "コウ", "タン", "ダイ"], correct: 0},
+  {q: "Kanji 低 suomeksi", answers: ["matala", "korkea", "lyhyt", "iso"], correct: 0},
+  {q: "Kun: kanjille 暗", answers: ["くらい", "あかるい", "やすい", "ふるい"], correct: 0},
+  {q: "On: kanjille 暗", answers: ["アン", "メイ", "アン", "コ"], correct: 0},
+  {q: "Kanji 暗 suomeksi", answers: ["pimeä", "kirkas", "halpa", "vanha"], correct: 0},
+  {q: "Kun: kanjille 多", answers: ["おおい", "すくない", "ながい", "みじかい"], correct: 0},
+  {q: "On: kanjille 多", answers: ["タ", "ショウ", "チョウ", "タン"], correct: 0},
+  {q: "Kanji 多 suomeksi", answers: ["paljon", "vähän", "pitkä", "lyhyt"], correct: 0},
+  {q: "Kun: kanjille 少", answers: ["すくない", "おおい", "やすい", "たかい"], correct: 0},
+  {q: "On: kanjille 少", answers: ["ショウ", "タ", "アン", "コウ"], correct: 0},
+  {q: "Kanji 少 suomeksi", answers: ["vähän", "paljon", "halpa", "korkea"], correct: 0}
+
+];
+
+
+function shuffleArray(array) {
+  let newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
+
+function shuffleQuestion(question) {
+  const answers = [...question.answers];
+  const correctAnswer = answers[question.correct];
+
+  const shuffledAnswers = shuffleArray(answers);
+  const newCorrectIndex = shuffledAnswers.indexOf(correctAnswer);
+
+  return {
+    ...question,
+    answers: shuffledAnswers,
+    correct: newCorrectIndex
+  };
+}
+
+
+let shuffledQuestions = [];
+// --- ALUSTA PELI ---
+function prepareGame(count) {
+  shuffledQuestions = shuffleArray(
+    questions.map(q => shuffleQuestion(q))
+  ).slice(0, count); // 🔥 ottaa vain halutun määrän
+}
+
+
+let currentQuestion = 0;
+let score = 0;
+
+
+function showQuestion() {
+  updateProgress(); // 🔥 LISÄÄ TÄMÄ
+
+  let q = shuffledQuestions[currentQuestion];
+
+  document.getElementById("question").innerText = q.q;
+
+  for (let i = 0; i < 4; i++) {
+    document.getElementById("a"+i).innerText = q.answers[i];
+  }
+
+  document.getElementById("result").innerText = "";
+}
+
+
+function checkAnswer(i) {
+  let q = shuffledQuestions[currentQuestion];
+
+  if (i === q.correct) {
+    document.getElementById("result").innerText = "Maru! ⭕";
+    score++;
+  } else {
+    document.getElementById("result").innerText = "Batsu ❎";
+  }
+
+  currentQuestion++;
+
+  if (currentQuestion < shuffledQuestions.length) {
+    setTimeout(showQuestion, 1000);
+  } else {
+    document.getElementById("question").innerText = "Peli loppui!";
+    document.getElementById("answers").style.display = "none";
+
+    let finalMessage = "";
+    if (score === shuffledQuestions.length) finalMessage = "Maru! ⭕";
+    else if (score === 0) finalMessage = "Batsu ❎";
+    else finalMessage = "Sankaku 🔺";
+
+    document.getElementById("score").innerText =
+      finalMessage + " — Sait " + score + " / " + shuffledQuestions.length + " pistettä.";
+
+    document.getElementById("restart").style.display = "block";
+  }
+}
+function startGame() {
+  let value = document.getElementById("questionCount").value;
+
+  let count = value === "all" ? questions.length : parseInt(value);
+
+  currentQuestion = 0;
+  score = 0;
+
+  prepareGame(count);
+
+  document.getElementById("answers").style.display = "block";
+  document.getElementById("restart").style.display = "none";
+  document.getElementById("score").innerText = "";
+
+  showQuestion();
+  updateProgress();
+}
+
+function restartGame() {
+  startGame(); // käyttää samaa valittua määrää
+}
+
+function updateProgress() {
+  let total = shuffledQuestions.length;
+  let current = currentQuestion;
+
+  let percent = (current / total) * 100;
+
+  document.getElementById("progressBar").style.width = percent + "%";
+
+  document.getElementById("progressText").innerText =
+    (current + 1) + " / " + total;
+}
+
+
+</script>
+    <p>
+        <a href="kielioppi.html">← Takaisin kielioppi sivulle</a>
+    </p>
+    <p>
+        <a href="index.html">← Takaisin etusivulle</a>
+    </p>
+</main>
+<footer  class="bottomline">
+    <p>© 2026 Lyytikäinen Aki. All rights reserved.</p>
+</footer>
+<script>
+    const toggleButton = document.getElementById('theme-toggle');
+
+    // Lataa tallennettu teema
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+    }
+
+    toggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+
+        if (document.body.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+</script>
+</body>
+</html>
