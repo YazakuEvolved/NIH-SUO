@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>NIH-SUO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="peli.css">
+    <link rel="canonical" href="https://nihsuo.com/hiraganapeli.html">
+
+</head>
+<body>
+<header class="topline">
+		<a href="index.html" class="logo-link">
+        	<img src="Logo.svg" alt="Sivuston logo" class="logo-small">
+    	</a>
+    <p>Nih-Suo</p>
+    	<div>
+        	<button id="theme-toggle">光 / 闇</button>
+    	</div>
+</header>
+
+<body>
+
+<h1>Partikkeli Peli</h1>
+
+<div id="game">
+
+  <h2>Valitse oikea vastaus<br>
+  20 kysymystä</h2>
+
+  <!-- Kysymys -->
+  <div id="question">Kysymys tulee tähän</div>
+
+  <!-- Vastausvaihtoehdot -->
+  <div id="answers">
+    <button onclick="checkAnswer(0)" id="a0"></button>
+    <button onclick="checkAnswer(1)" id="a1"></button>
+    <button onclick="checkAnswer(2)" id="a2"></button>
+    <button onclick="checkAnswer(3)" id="a3"></button>
+  </div>
+
+  <!-- Tulos -->
+  <p id="result"></p>
+
+  <!-- Pisteet -->
+  <p id="score"></p>
+
+  <!-- Restart nappi -->
+  <button id="restart" onclick="restartGame()" style="display:none;">Pelaa uudelleen</button>
+
+</div>
+
+<script>
+
+// --- KYSYMYKSET ---
+const questions = [
+  {q: "猫_います。Neko _ imasu.",answers: ["が (ga)", "と (to)", "に (ni)", "か (ka)"],correct: 0},
+  {q: "水_飲みます。Mizu _ nomimasu.",answers: ["を (o)", "が (ga)", "の (no)", "に (ni)"],correct: 0},
+  {q: "学校_行きます。Gakkō _ ikimasu.",answers: ["に (ni)", "と (to)", "も (mo)", "か (ka)"],correct: 0},
+  {q: "7時_起きます。Shichi-ji _ okimasu.",answers: ["に (ni)", "へ (he)", "の (no)", "を (o)"],correct: 0},
+  {q: "バス_行きます。Basu _ ikimasu.",answers: ["で (de)", "を (o)", "と (to)", "も (mo)"],correct: 0},
+  {q: "公園_遊びます。Kōen _ asobimasu.",answers: ["で (de)", "も (mo)", "か (ka)", "ね (ne)"],correct: 0},
+  {q: "友達_話します。Tomodachi _ hanashimasu.",answers: ["と (to)", "ね (ne)", "か (ka)", "も (mo)"],correct: 0},
+  {q: "パン_食べます。Pan _ tabemasu.",answers: ["を (o)", "と (to)", "に (ni)", "か (ka)"],correct: 0},
+  {q: "コーヒー_飲みます。Kōhī _ nomimasu.",answers: ["を (o)", "が (ga)", "の (no)", "に (ni)"],correct: 0},
+  {q: "私_行きます。Watashi _ ikimasu.",answers: ["も (mo)", "よ (yo)", "ね (ne)", "か (ka)"],correct: 0},
+  {q: "これは私_本です。Kore wa watashi _ hon desu.",answers: ["の (no)", "か (ka)", "ね (ne)", "よ (yo)"],correct: 0},
+  {q: "日本語_勉強します。Nihongo _ benkyō shimasu.",answers: ["を (o)", "と (to)", "に (ni)", "か (ka)"],correct: 0},
+  {q: "図書館_勉強します。Toshokan _ benkyō shimasu.",answers: ["で (de)", "に (ni)", "と (to)", "を (o)"],correct: 0},
+  {q: "友達_会います。Tomodachi _ aimasu.",answers: ["に (ni)", "で (de)", "を (o)", "と (to)"],correct: 0},
+  {q: "先生_聞きます。Sensei _ kikimasu.",answers: ["に (ni)", "で (de)", "を (o)", "と (to)"],correct: 0},
+  {q: "元気です_。Genki desu _.",answers: ["か (ka)", "を (o)", "と (to)", "に (ni)"],correct: 0},
+  {q: "きれいです_。Kirei desu _.",answers: ["ね (ne)", "が (ga)", "は (wa)", "の (no)"],correct: 0},
+  {q: "暑いです_。Atsui desu _.",answers: ["ね (ne)", "も (mo)", "と (to)", "の (no)"],correct: 0},
+  {q: "本当です_。Hontō desu _.",answers: ["よ (yo)", "に (ni)", "の (no)", "を (o)"],correct: 0},
+  {q: "これは大事です_。Kore wa daiji desu _.",answers: ["よ (yo)", "を (o)", "が (ga)", "は (wa)"],correct: 0}
+
+];
+
+
+// --- SEKOITUSFUNKTIOT ---
+
+function shuffleArray(array) {
+  let newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
+
+function shuffleQuestion(question) {
+  const answers = [...question.answers];
+  const correctAnswer = answers[question.correct];
+
+  const shuffledAnswers = shuffleArray(answers);
+  const newCorrectIndex = shuffledAnswers.indexOf(correctAnswer);
+
+  return {
+    ...question,
+    answers: shuffledAnswers,
+    correct: newCorrectIndex
+  };
+}
+
+
+// --- SEKOITETTU KYSYMYSLISTA ---
+
+let shuffledQuestions = [];
+
+function prepareGame() {
+  shuffledQuestions = shuffleArray(
+    questions.map(q => shuffleQuestion(q))
+  );
+}
+
+
+// --- PELIN MUUTTUJAT ---
+
+let currentQuestion = 0;
+let score = 0;
+
+
+// --- NÄYTÄ KYSYMYS ---
+
+function showQuestion() {
+  let q = shuffledQuestions[currentQuestion];
+
+  document.getElementById("question").innerText = q.q;
+
+  for (let i = 0; i < 4; i++) {
+    document.getElementById("a"+i).innerText = q.answers[i];
+  }
+
+  document.getElementById("result").innerText = "";
+}
+
+
+// --- TARKISTA VASTAUS ---
+
+function checkAnswer(i) {
+  let q = shuffledQuestions[currentQuestion];
+
+  if (i === q.correct) {
+    document.getElementById("result").innerText = "Maru! ⭕";
+    score++;
+  } else {
+    document.getElementById("result").innerText = "Batsu ❎";
+  }
+
+  currentQuestion++;
+
+  if (currentQuestion < shuffledQuestions.length) {
+    setTimeout(showQuestion, 1000);
+  } else {
+    document.getElementById("question").innerText = "Peli loppui!";
+    document.getElementById("answers").style.display = "none";
+
+    let finalMessage = "";
+    if (score === shuffledQuestions.length) finalMessage = "Maru! ⭕";
+    else if (score === 0) finalMessage = "Batsu ❎";
+    else finalMessage = "Sankaku 🔺";
+
+    document.getElementById("score").innerText =
+      finalMessage + " — Sait " + score + " / " + shuffledQuestions.length + " pistettä.";
+
+    document.getElementById("restart").style.display = "block";
+  }
+}
+
+
+// --- RESTART ---
+
+function restartGame() {
+  currentQuestion = 0;
+  score = 0;
+
+  prepareGame(); // 🔥 tärkeä
+
+  document.getElementById("answers").style.display = "block";
+  document.getElementById("restart").style.display = "none";
+  document.getElementById("score").innerText = "";
+
+  showQuestion();
+}
+
+
+// --- ALOITUS ---
+
+prepareGame();
+showQuestion();
+
+
+</script>
+    <p>
+        <a href="kielioppi.html">← Takaisin kielioppi sivulle</a>
+    </p>
+    <p>
+        <a href="index.html">← Takaisin etusivulle</a>
+    </p>
+</main>
+<footer  class="bottomline">
+    <p>© 2026 Lyytikäinen Aki. All rights reserved.</p>
+</footer>
+<script>
+    const toggleButton = document.getElementById('theme-toggle');
+
+    // Lataa tallennettu teema
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+    }
+
+    toggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+
+        if (document.body.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+</script>
+</body>
+</html>
