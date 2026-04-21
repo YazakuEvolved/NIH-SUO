@@ -21,6 +21,11 @@ body {
         width: 120px;
     }
 }
+.kuva {
+  max-width: 800px;
+  width: 100%;
+  height: auto;
+}
 .topline {
     background-color: #BC002D;
     color: #002F6C;
