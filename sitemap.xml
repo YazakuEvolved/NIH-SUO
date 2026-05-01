@@ -23,6 +23,11 @@
   </url>
 
   <url>
+    <loc>https://nihsuo.com/osaka/osaka.html</loc>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://nihsuo.com/kielioppi.html</loc>
     <priority>0.8</priority>
   </url>
