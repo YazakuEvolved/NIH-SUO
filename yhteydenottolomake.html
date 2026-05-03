@@ -20,7 +20,11 @@
 </header>
 
 <main class="content">
-    <h1>Yhteydenottolomake</h1>
+    <h1>Yhteydenottolomake<br>
+    <span lang="ja">お<ruby>問<rt>と</rt></ruby>い<ruby>合<rt>あ</rt></ruby>わせフォーム</h1>
+		<p>Alla olevalla lomakkeella voitte kertoa kuulumisia, kehitysehdotuksia, sekä
+    	raportoida virheistä.<br>
+    	下のフォーム、または直接メールで、近況やご意見、ご提案、または不具合の報告をお送りいただけます。</p>
 <form id="contact-form">
   <input type="email" name="user_email" placeholder="S-posti / メール" required><br>
   <textarea name="message" placeholder="Viesti / メッセージ" required></textarea><br>
@@ -41,8 +45,10 @@ document.getElementById("contact-form").addEventListener("submit", function(e) {
     .catch(() => alert("Error, try again"));
 });
 </script>
+	<p>Sivuston sähköpostiosoite / <span lang="ja">サイトのメールアドレス</span>
+	"nihsuo@gmail.com"</p>
     <p>
-        <a href="nih-suo.html">← Takaisin etusivulle <span lang="ja">トップページに
+        <a href="nih-suo.html">← Takaisin etusivulle / <span lang="ja">トップページに
         <ruby>戻<rt>もど</rt></ruby>る</span></a>
     </p>
 </main>
