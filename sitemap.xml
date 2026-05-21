@@ -21,7 +21,12 @@
     <loc>https://nihsuo.com/shinkansen.html</loc>
     <priority>0.8</priority>
   </url>
-
+  
+  <url>
+    <loc>https://nihsuo.com/arimaonsen/arimaonsen.html</loc>
+    <priority>0.8</priority>
+  </url>
+  
   <url>
     <loc>https://nihsuo.com/osaka/osaka.html</loc>
     <priority>0.8</priority>
