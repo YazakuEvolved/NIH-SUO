@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>NIH-SUO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="peli.css">
+    <link rel="canonical" href="https://nihsuo.com/kanjipeli.html">
+
+</head>
+<body>
+<!-- ==================================== -->
+<!--               Yliö                   -->
+<!-- Logo joka toimii linkkinä etusivulle -->
+<!-- ==================================== -->
+<header class="topline">
+		<a href="nih-suo.html" class="logo-link">
+        	<img src="Logo.svg" alt="Sivuston logo" class="logo-small">
+    	</a>
+    <p>Nih-Suo</p>
+<!-- =========================== -->
+<!-- Tumman teeman valintakytkin -->
+<!-- =========================== -->
+    	<div>
+        	<button id="theme-toggle">光 / 闇</button>
+    	</div>
+</header>
+
+<body>
+
+<h1>Kanji Peli</h1>
+
+<div id="game">
+
+  <h2>Valitse oikea vastaus</h2>
+
+<p>Valitse kysymysten määrä:</p>
+<select id="questionCount">
+  <option value="5">5</option>
+  <option value="10">10</option>
+  <option value="20">20</option>
+  <option value="all">Kaikki kysymykset</option>
+</select>
+
+<button onclick="startGame()">Aloita peli</button>
+
+<div id="progressContainer">
+  <div id="progressBar"></div>
+</div>
+
+<p id="progressText"></p>
+
+  <!-- Kysymys -->
+  <div id="question">Kysymys tulee tähän</div>
+
+  <!-- Vastausvaihtoehdot -->
+  <div id="answers">
+    <button onclick="checkAnswer(0)" id="a0"></button>
+    <button onclick="checkAnswer(1)" id="a1"></button>
+    <button onclick="checkAnswer(2)" id="a2"></button>
+    <button onclick="checkAnswer(3)" id="a3"></button>
+  </div>
+
+  <!-- Tulos -->
+  <p id="result"></p>
+
+  <!-- Pisteet -->
+  <p id="score"></p>
+
+  <!-- Restart nappi -->
+  <button id="restart" onclick="restartGame()" style="display:none;">Pelaa uudelleen</button>
+
+</div>
+
+<script>
+
+// --- KYSYMYKSET ---
+const questions = [
+  {q: "Valitse maanantai げつようび",answers: ["月曜日", "火曜日", "水曜日", "木曜日"],correct: 0},
+  {q: "Valitse tiistai かようび",answers: ["火曜日", "日曜日", "水曜日", "木曜日"],correct: 0},
+  {q: "Valitse keskiviikko すいようび",answers: ["水曜日", "火曜日", "日曜日", "木曜日"],correct: 0},
+  {q: "Valitse torstai もくようび",answers: ["木曜日", "火曜日", "水曜日", "日曜日"],correct: 0},
+  {q: "Valitse perjantai きんようび",answers: ["金曜日", "火曜日", "水曜日", "木曜日"],correct: 0},
+  {q: "Valitse lauantai どようび",answers: ["土曜日", "火曜日", "水曜日", "木曜日"],correct: 0},
+  {q: "Valitse sunnuntai にちようび",answers: ["日曜日", "火曜日", "水曜日", "木曜日"],correct: 0},
+  {q: "Kanji 日 suomeksi",answers: ["pohjoinen", "ruoka", "päivä", "pöytä"],correct: 2},
+  {q: "Kanji 月 suomeksi",answers: ["uusi", "vesi", "riisi", "kuu"],correct: 3},
+  {q: "Kanji 木 suomeksi",answers: ["puu", "vesi", "riisi", "tee"],correct: 0},
+  {q: "Kanji 山 suomeksi",answers: ["joki", "mäki", "riisi", "vuori"],correct: 3},
+  {q: "Kanji 川 suomeksi",answers: ["joki", "mäki", "riisi", "metsä"],correct: 0},
+  {q: "Kanji 田 suomeksi",answers: ["riisi", "taulu", "metsä", "riisipelto"],correct: 3},
+  {q: "Kanji 人 suomeksi",answers: ["lapsi", "ihminen", "portti", "auto"],correct: 1},
+  {q: "Kanji 口 suomeksi",answers: ["suu", "silmä", "korva", "käsi"],correct: 0},
+  {q: "Kanji 車 suomeksi",answers: ["vene", "juna", "auto", "pyörä"],correct: 2},
+  {q: "Kanji 門 suomeksi",answers: ["talo", "ovi", "ikkuna", "portti"],correct: 3},
+  {q: "Kanji 火 suomeksi",answers: ["maa", "vesi", "tuli", "ilma"],correct: 2},
+  {q: "Kanji 水 suomeksi",answers: ["vesi", "tuli", "metalli", "puu"],correct: 0},
+  {q: "Kanji 金 suomeksi",answers: ["pronssi", "hopea", "kulta", "maa"],correct: 2},
+  {q: "Kanji 土 suomeksi",answers: ["vesi", "maa", "tuli", "ilma"],correct: 1},
+  {q: "Kanji 子 suomeksi",answers: ["poika", "tyttö", "lapsi", "vanhempi"],correct: 2},
+  {q: "Kanji 女 suomeksi",answers: ["tyttö", "nainen", "lapsi", "äiti"],correct: 1},
+  {q: "Kanji 学 suomeksi",answers: ["kirja", "auto", "tarha", "opiskella"],correct: 3},
+  {q: "Kanji 生 suomeksi",answers: ["elämä", "kivi", "pilvi", "lanka"],correct: 0},
+  {q: "Kanji 先 suomeksi",answers: ["loppu", "ennen", "alku", "koti"],correct: 1},
+  {q: "Kanji 私 suomeksi",answers: ["minä", "sinä", "hän", "me"],correct: 0},
+  {q: "Kanji 一 suomeksi", answers: ["yksi", "kaksi", "kolme", "neljä"], correct: 0},
+  {q: "Kanji 二 suomeksi", answers: ["kaksi", "yksi", "kolme", "viisi"], correct: 0},
+  {q: "Kanji 三 suomeksi", answers: ["kolme", "kaksi", "neljä", "yhdeksän"], correct: 0},
+  {q: "Kanji 四 suomeksi", answers: ["neljä", "kolme", "viisi", "kahdeksan"], correct: 0},
+  {q: "Kanji 五 suomeksi", answers: ["viisi", "neljä", "kuusi", "seitsemän"], correct: 0},
+  {q: "Kanji 六 suomeksi", answers: ["kuusi", "viisi", "yhdeksän", "kymmenen"], correct: 0},
+  {q: "Kanji 七 suomeksi", answers: ["seitsemän", "kuusi", "kahdeksan", "kymmenen"], correct: 0},
+  {q: "Kanji 八 suomeksi", answers: ["kahdeksan", "seitsemän", "yhdeksän", "kaksi"], correct: 0},
+  {q: "Kanji 九 suomeksi", answers: ["yhdeksän", "kahdeksan", "kymmenen", "viisi"], correct: 0},
+  {q: "Kanji 十 suomeksi", answers: ["kymmenen", "yhdeksän", "kaksi", "kolme"], correct: 0},
+  {q: "Kanji 百 suomeksi", answers: ["sata", "tuhat", "kymmenentuhatta", "viisi"], correct: 0},
+  {q: "Kanji 千 suomeksi", answers: ["tuhat", "sata", "kymmenentuhatta", "pitkä"], correct: 0},
+  {q: "Kanji 万 suomeksi", answers: ["kymmenentuhatta", "tuhat", "vuosi", "voima"], correct: 0},
+  {q: "Kanji 円 suomeksi", answers: ["jeni", "vuosi", "halpa", "kallis"], correct: 0},
+  {q: "Kanji 年 suomeksi", answers: ["vuosi", "sisällä", "pimeä", "vähän"], correct: 0},
+  {q: "Kanji 上 suomeksi", answers: ["ylhäällä", "alhaalla", "sisällä", "halpa"], correct: 0},
+  {q: "Kanji 下 suomeksi", answers: ["alhaalla", "ylhäällä", "sisällä", "pieni"], correct: 0},
+  {q: "Kanji 中 suomeksi", answers: ["sisällä", "ulkona", "ylhäällä", "iso"], correct: 0},
+  {q: "Kanji 大 suomeksi", answers: ["iso", "pieni", "pitkä", "halpa"], correct: 0},
+  {q: "Kanji 小 suomeksi", answers: ["pieni", "iso", "vähän", "pitkä"], correct: 0},
+  {q: "Kanji 本 suomeksi", answers: ["kirja", "metsä", "keho", "kirjain"], correct: 0},
+  {q: "Kanji 半 suomeksi", answers: ["puoli", "kirja", "väli", "halpa"], correct: 0},
+  {q: "Kanji 分 suomeksi", answers: ["jakaa, osa", "puoli", "kirjain", "keho"], correct: 0},
+  {q: "Kanji 力 suomeksi", answers: ["voima", "käsi", "kivi", "keho"], correct: 0},
+  {q: "Kanji 何 suomeksi", answers: ["mikä", "sisällä", "sade", "vähän"], correct: 0},
+  {q: "Valitse Japani Nihon",answers: ["日本", "君が代", "金本", "日金"],correct: 0},
+  {q: "Valitse Tammikuu Ichigatsu",answers: ["1月", "1日", "1本", "1金"],correct: 0},
+  {q: "Valitse Helmikuu 2月",answers: ["にがつ", "いちがつ", "さんがつ", "しがつ"],correct: 0},
+  {q: "Valitse Maaliskuu 3月",answers: ["さんがつ", "しがつ", "ごがつ", "ろくがつ"],correct: 0},
+  {q: "Valitse Huhtikuu 4月",answers: ["しがつ", "ごがつ", "ろくがつ", "しちがつ"],correct: 0},
+  {q: "Valitse Toukokuu 5月",answers: ["ごがつ", "ろくがつ", "しちがつ", "はちがつ"],correct: 0},
+  {q: "Valitse Kesäkuu 6月",answers: ["ろくがつ", "しちがつ", "はちがつ", "くがつ"],correct: 0},
+  {q: "Valitse Heinäkuu 7月",answers: ["しちがつ", "はちがつ", "くがつ", "じゅうがつ"],correct: 0},
+  {q: "Valitse Elokuu 8月",answers: ["はちがつ", "くがつ", "じゅうがつ", "じゅういちがつ"],correct: 0},
+  {q: "Valitse Syyskuu 9月",answers: ["くがつ", "じゅうがつ", "じゅういちがつ", "じゅうにがつ"],correct: 0},
+  {q: "Valitse Lokakuu 10月",answers: ["じゅうがつ", "じゅういちがつ", "じゅうにがつ", "いちがつ"],correct: 0},
+  {q: "Valitse Marraskuu 11月",answers: ["じゅういちがつ", "じゅうにがつ", "いちがつ", "にがつ"],correct: 0},
+  {q: "Valitse Joulukuu 12月",answers: ["じゅうにがつ", "いちがつ", "じゅういちがつ", "じゅうさんがつ"],correct: 0},
+  {q: "Täydennä Fuji vuori 富士",answers: ["山", "生", "川", "木"],correct: 0},
+  {q: "Valitse väestö じんこう",answers: ["人口", "人生", "口川", "木人"],correct: 0},
+  {q: "Valitse riisipelto すいでん",answers: ["水田", "人口", "川田", "木田"],correct: 0},
+  {q: "Valitse yliopisto だいがく",answers: ["大学", "人学", "日本語", "中学校"],correct: 0},
+  {q: "Valitse opettaja せんせい",answers: ["大学", "学祭", "日本語", "中学校"],correct: 0},
+  {q: "Valitse edellä さきに",answers: ["先に", "気に", "背に", "アニ"],correct: 0},
+  {q: "Valitse yksi ihminen 一人",answers: ["ひとり", "いちがつ", "いち", "とり"],correct: 0},
+  {q: "Valitse kaksi ihmistä 二人",answers: ["ふたり", "ひとり", "さんにん", "いちがつ"],correct: 0},
+  {q: "Valitse kolme ihmistä 三人",answers: ["さんにん", "ひとり", "ふたり", "いちがつ"],correct: 0}
+];
+
+
+// --- SEKOITUSFUNKTIOT ---
+
+function shuffleArray(array) {
+  let newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
+
+function shuffleQuestion(question) {
+  const answers = [...question.answers];
+  const correctAnswer = answers[question.correct];
+
+  const shuffledAnswers = shuffleArray(answers);
+  const newCorrectIndex = shuffledAnswers.indexOf(correctAnswer);
+
+  return {
+    ...question,
+    answers: shuffledAnswers,
+    correct: newCorrectIndex
+  };
+}
+
+
+// --- SEKOITETTU KYSYMYSLISTA ---
+
+let shuffledQuestions = [];
+// --- ALUSTA PELI ---
+function prepareGame(count) {
+  shuffledQuestions = shuffleArray(
+    questions.map(q => shuffleQuestion(q))
+  ).slice(0, count); // 🔥 ottaa vain halutun määrän
+}
+
+
+// --- PELIN MUUTTUJAT ---
+
+let currentQuestion = 0;
+let score = 0;
+
+
+// --- NÄYTÄ KYSYMYS ---
+
+function showQuestion() {
+  updateProgress(); // 🔥 LISÄÄ TÄMÄ
+
+  let q = shuffledQuestions[currentQuestion];
+
+  document.getElementById("question").innerText = q.q;
+
+  for (let i = 0; i < 4; i++) {
+    document.getElementById("a"+i).innerText = q.answers[i];
+  }
+
+  document.getElementById("result").innerText = "";
+}
+
+
+// --- TARKISTA VASTAUS ---
+
+function checkAnswer(i) {
+  let q = shuffledQuestions[currentQuestion];
+
+  if (i === q.correct) {
+    document.getElementById("result").innerText = "Maru! ⭕";
+    score++;
+  } else {
+    document.getElementById("result").innerText = "Batsu ❎";
+  }
+
+  currentQuestion++;
+
+  if (currentQuestion < shuffledQuestions.length) {
+    setTimeout(showQuestion, 1000);
+  } else {
+    document.getElementById("question").innerText = "Peli loppui!";
+    document.getElementById("answers").style.display = "none";
+
+    let finalMessage = "";
+    if (score === shuffledQuestions.length) finalMessage = "Maru! ⭕";
+    else if (score === 0) finalMessage = "Batsu ❎";
+    else finalMessage = "Sankaku 🔺";
+
+    document.getElementById("score").innerText =
+      finalMessage + " — Sait " + score + " / " + shuffledQuestions.length + " pistettä.";
+
+    document.getElementById("restart").style.display = "block";
+  }
+}
+// --- StartGame ---
+function startGame() {
+  let value = document.getElementById("questionCount").value;
+
+  // 🔥 tärkeä kohta
+  let count = value === "all" ? questions.length : parseInt(value);
+
+  currentQuestion = 0;
+  score = 0;
+
+  prepareGame(count);
+
+  document.getElementById("answers").style.display = "block";
+  document.getElementById("restart").style.display = "none";
+  document.getElementById("score").innerText = "";
+
+  showQuestion();
+  updateProgress();
+}
+
+// --- RESTART ---
+
+function restartGame() {
+  startGame(); // käyttää samaa valittua määrää
+}
+
+// --- Progress Bar ---
+
+function updateProgress() {
+  let total = shuffledQuestions.length;
+  let current = currentQuestion;
+
+  let percent = (current / total) * 100;
+
+  document.getElementById("progressBar").style.width = percent + "%";
+
+  // 🔥 X/Y-muoto
+  document.getElementById("progressText").innerText =
+    (current + 1) + " / " + total;
+}
+
+
+</script>
+
+<!-- ========================= -->
+<!--    Takasin etusivulle     -->
+<!-- ========================= -->
+    <p>
+        <a href="kielioppi.html">← Takaisin kielioppi sivulle</a>
+    </p>
+    <p>
+        <a href="nih-suo.html">← Takaisin etusivulle</a>
+    </p>
+</main>
+<!-- ========================= -->
+<!--        Alapalkki          -->
+<!-- ========================= -->
+<footer  class="bottomline">
+    <p>© 2026 Lyytikäinen Aki. All rights reserved.</p>
+</footer>
+<!-- ============================ -->
+<!-- Tumman teeman valinta script -->
+<!-- ============================ -->
+<script>
+    const toggleButton = document.getElementById('theme-toggle');
+
+    // Lataa tallennettu teema
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark');
+    }
+
+    toggleButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+
+        if (document.body.classList.contains('dark')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    });
+</script>
+</body>
+</html>
