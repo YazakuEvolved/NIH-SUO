@@ -5,22 +5,15 @@
     <title>NIH-SUO</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="peli.css">
-    <link rel="canonical" href="https://nihsuo.com/kanjipeli.html">
+    <link rel="canonical" href="https://nihsuo.com/kanjipeli2.html">
 
 </head>
 <body>
-<!-- ==================================== -->
-<!--               Yliö                   -->
-<!-- Logo joka toimii linkkinä etusivulle -->
-<!-- ==================================== -->
 <header class="topline">
-		<a href="nih-suo.html" class="logo-link">
+		<a href="index.html" class="logo-link">
         	<img src="Logo.svg" alt="Sivuston logo" class="logo-small">
     	</a>
     <p>Nih-Suo</p>
-<!-- =========================== -->
-<!-- Tumman teeman valintakytkin -->
-<!-- =========================== -->
     	<div>
         	<button id="theme-toggle">光 / 闇</button>
     	</div>
@@ -50,10 +43,8 @@
 
 <p id="progressText"></p>
 
-  <!-- Kysymys -->
   <div id="question">Kysymys tulee tähän</div>
 
-  <!-- Vastausvaihtoehdot -->
   <div id="answers">
     <button onclick="checkAnswer(0)" id="a0"></button>
     <button onclick="checkAnswer(1)" id="a1"></button>
@@ -61,20 +52,16 @@
     <button onclick="checkAnswer(3)" id="a3"></button>
   </div>
 
-  <!-- Tulos -->
   <p id="result"></p>
 
-  <!-- Pisteet -->
   <p id="score"></p>
 
-  <!-- Restart nappi -->
   <button id="restart" onclick="restartGame()" style="display:none;">Pelaa uudelleen</button>
 
 </div>
 
 <script>
 
-// --- KYSYMYKSET ---
 const questions = [
   {q: "Valitse maanantai げつようび",answers: ["月曜日", "火曜日", "水曜日", "木曜日"],correct: 0},
   {q: "Valitse tiistai かようび",answers: ["火曜日", "日曜日", "水曜日", "木曜日"],correct: 0},
@@ -153,7 +140,6 @@ const questions = [
 ];
 
 
-// --- SEKOITUSFUNKTIOT ---
 
 function shuffleArray(array) {
   let newArray = [...array];
@@ -179,27 +165,23 @@ function shuffleQuestion(question) {
 }
 
 
-// --- SEKOITETTU KYSYMYSLISTA ---
 
 let shuffledQuestions = [];
-// --- ALUSTA PELI ---
 function prepareGame(count) {
   shuffledQuestions = shuffleArray(
     questions.map(q => shuffleQuestion(q))
-  ).slice(0, count); // 🔥 ottaa vain halutun määrän
+  ).slice(0, count); 
 }
 
 
-// --- PELIN MUUTTUJAT ---
 
 let currentQuestion = 0;
 let score = 0;
 
 
-// --- NÄYTÄ KYSYMYS ---
 
 function showQuestion() {
-  updateProgress(); // 🔥 LISÄÄ TÄMÄ
+  updateProgress(); 
 
   let q = shuffledQuestions[currentQuestion];
 
@@ -213,7 +195,6 @@ function showQuestion() {
 }
 
 
-// --- TARKISTA VASTAUS ---
 
 function checkAnswer(i) {
   let q = shuffledQuestions[currentQuestion];
@@ -244,11 +225,11 @@ function checkAnswer(i) {
     document.getElementById("restart").style.display = "block";
   }
 }
-// --- StartGame ---
+
 function startGame() {
   let value = document.getElementById("questionCount").value;
 
-  // 🔥 tärkeä kohta
+
   let count = value === "all" ? questions.length : parseInt(value);
 
   currentQuestion = 0;
@@ -264,13 +245,11 @@ function startGame() {
   updateProgress();
 }
 
-// --- RESTART ---
 
 function restartGame() {
-  startGame(); // käyttää samaa valittua määrää
+  startGame(); 
 }
 
-// --- Progress Bar ---
 
 function updateProgress() {
   let total = shuffledQuestions.length;
@@ -280,7 +259,7 @@ function updateProgress() {
 
   document.getElementById("progressBar").style.width = percent + "%";
 
-  // 🔥 X/Y-muoto
+  
   document.getElementById("progressText").innerText =
     (current + 1) + " / " + total;
 }
@@ -288,29 +267,22 @@ function updateProgress() {
 
 </script>
 
-<!-- ========================= -->
-<!--    Takasin etusivulle     -->
-<!-- ========================= -->
     <p>
         <a href="kielioppi.html">← Takaisin kielioppi sivulle</a>
     </p>
     <p>
-        <a href="nih-suo.html">← Takaisin etusivulle</a>
+        <a href="index.html">← Takaisin etusivulle</a>
     </p>
 </main>
-<!-- ========================= -->
-<!--        Alapalkki          -->
-<!-- ========================= -->
+
 <footer  class="bottomline">
     <p>© 2026 Lyytikäinen Aki. All rights reserved.</p>
 </footer>
-<!-- ============================ -->
-<!-- Tumman teeman valinta script -->
-<!-- ============================ -->
+
 <script>
     const toggleButton = document.getElementById('theme-toggle');
 
-    // Lataa tallennettu teema
+
     if (localStorage.getItem('theme') === 'dark') {
         document.body.classList.add('dark');
     }
