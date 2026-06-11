@@ -114,6 +114,9 @@ button {
     font-size: 16px;
     cursor: pointer;
 }
+#question {
+    font-size: 22px; /* muuta kokoa haluamaksesi */
+}
 #result {
     font-weight: bold;
 }
