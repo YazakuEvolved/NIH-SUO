@@ -33,8 +33,19 @@ body {
     padding: 0.75rem 1rem;
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     font-family: "Noto Sans JP", "Hiragino Kaku Gothic Pro", Meiryo, sans-serif;
     font-size: 0.9rem;   
+}
+.left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    text-align: left;
+}
+.right {
+    display: flex;
+    align-items: flex-start;
 }
 .logo-small {
     height: 40px;     
