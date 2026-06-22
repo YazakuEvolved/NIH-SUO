@@ -56,6 +56,11 @@
     <loc>https://nihsuo.com/kanjipeli.html</loc>
     <priority>0.8</priority>
   </url>
+  
+  <url>
+    <loc>https://nihsuo.com/kanjipeli2.html</loc>
+    <priority>0.8</priority>
+  </url>
 
   <url>
     <loc>https://nihsuo.com/partikkelipeli.html</loc>
