@@ -18,28 +18,11 @@
 </head>
 <body>
 <header class="topline">
-    <p> <span lang="ja">© 2026 リュウティカイネン アキ。 無断転載を禁じます。</span> </p>
-	<p id="tulos"></p>
-
-<script>
-const viikonpaiva = new Date().getDay();
-
-let sana = "";
-
-switch (viikonpaiva) {
-  case 0: sana = "日曜日"; break;
-  case 1: sana = "月曜日"; break;
-  case 2: sana = "火曜日"; break;
-  case 3: sana = "水曜日"; break;
-  case 4: sana = "木曜日"; break;
-  case 5: sana = "金曜日"; break;
-  case 6: sana = "土曜日"; break;
-  default: sana = "ミステリー";
-}
-
-document.getElementById("tulos").textContent = "今日は"+sana+"です。";
-</script>
-    	<div>
+    <div class="left">
+    	<p> <span lang="ja">© 2026 リュウティカイネン アキ。 無断転載を禁じます。</span> </p>
+    	<p id="tulos"></p>
+    </div>
+    	<div class="right">
         	<button id="theme-toggle"></button>
     	</div>
     		<script>
@@ -74,6 +57,24 @@ document.getElementById("tulos").textContent = "今日は"+sana+"です。";
     	updateButton();
 		});
 	</script>
+	<script>
+const viikonpaiva = new Date().getDay();
+
+let sana = "";
+
+switch (viikonpaiva) {
+  case 0: sana = "日曜日"; break;
+  case 1: sana = "月曜日"; break;
+  case 2: sana = "火曜日"; break;
+  case 3: sana = "水曜日"; break;
+  case 4: sana = "木曜日"; break;
+  case 5: sana = "金曜日"; break;
+  case 6: sana = "土曜日"; break;
+  default: sana = "ミステリー";
+}
+
+document.getElementById("tulos").textContent = "今日は"+sana+"です。";
+</script>
 </header>
 <main class="content">
     <h1>Nih-Suo</h1>
@@ -121,7 +122,7 @@ document.getElementById("tulos").textContent = "今日は"+sana+"です。";
         	<p><li><a href="tee/tee.html">Tee</a></li></p>
         	<p><li><a href="ravintolat.html">Ravintolat</a></li></p>
         	<p><li><a href="ruoka/ruoka.html">Ruoka</a></li></p>
-        	<p><li><a href="vuosiluku.html">Syntymävuosi laskuri</a></li></p>
+        	<p><li><a href="vuosiluku.html">Syntymävuosi laskuri (Ei toimi Androidissa pahoittelut!)</a></li></p>
     </section>
 </main>
     <ul>
